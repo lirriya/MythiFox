@@ -5,3 +5,12 @@ body {
 .logo {
     width: 150px;
 }
+
+.post-form{
+    background-color: #d8c3c3;
+    border: 2px solid #64485c;
+    padding: 15px;
+    margin: 20px auto;
+    max-width: 600px;
+    border-radius: 10px;
+}
