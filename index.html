@@ -9,17 +9,22 @@
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
   </head>
   <body>
+    <header class="header">
+      <img class="logo" src="assets/logo.png" alt="logo of the site" />
+      <div class="search-form" action="#" method="get">
+        <input type="text" placeholder="Search MythiFox..." name="q">
+      </div>
+      <button class="sign-in">Sign in</button>
+    </header>
     <main>
-        <div class="logo">
-            <img class="logo" src="assets/logo.png" alt="logo of the site"/>
-        </div>
-        <div class="post-form">
+      <div class="post-form">
         <h2>Share a post</h2>
         <form method="POST" enctype="multipart/form-data">
-          <textarea name="content" placeholder="Tell a story..." required></textarea> <br>
-          <button type="submit" name="post">Post</button>
+          <textarea name="content" placeholder="Tell a story..."
+            required></textarea> <br>
+          <button class="send" type="submit" name="post">Post</button>
         </form>
-      </div>  
+      </div>
     </main>
   </body>
 </html>
