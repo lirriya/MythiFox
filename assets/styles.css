@@ -36,7 +36,11 @@ main {
     color: #ADADAD;
     border: 1px solid #2e1114;
     padding: 5px 30px;
+    font-size: 14px;
+    padding-top: 15px;
+    
 }
+
 .post-form{
     background-color: #dbd2d2;
     border: 2px solid #64485c;
@@ -55,4 +59,50 @@ main {
 
 h2 {
     color: #501B1D;
+}
+
+.form-container {
+    background-color: #ead8ea;
+    border: 2px solid #b594b8;
+    padding: 20px;
+    max-width: 400px;
+    margin: 50px auto;
+    border-radius: 10px;
+}
+
+.form-container h2 {
+    text-align: center;
+    color: #563960;
+}
+
+.form-container input, .form-container button {
+    width: 100%;
+    padding: 10px;
+    padding-right: 0px;
+    margin: 10px 0;
+    border: 1px solid #b594b8;
+    border-radius: 5px;
+    background-color: #f4eaf4;
+    font-family: 'Lucida Sans', Geneva;
+}
+
+.form-container button {
+    background-color: #b594b8;
+    color: white;
+    font-weight: bold;
+}
+
+.form-container .error {
+    color: darkred;
+    text-align: center;
+}
+
+.form-container p {
+    text-align: center;
+}
+
+.form-container a {
+    color: #532f4b;
+    text-decoration: none;
+    text-align: center;
 }
