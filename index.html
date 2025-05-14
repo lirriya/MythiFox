@@ -7,24 +7,84 @@
     <title>MythiFox</title>
     <link rel="stylesheet" href="./assets/styles.css">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    
+
+
   </head>
   <body>
+    
+
     <header class="header">
-      <img class="logo" src="assets/logo.png" alt="logo of the site" />
+      <img class="logo" src="assets/logo.png" alt="logo of the site" /> 
       <div class="search-form" action="#" method="get">
-        <input type="text" placeholder="Search MythiFox..." name="q">
+        <input type="text" class="searchBar" placeholder="Search MythiFox..." name="q">
+        <i class ="fas fa-search"></i>
       </div>
-      <a class="sign-in" href="./authentication/register.html">Sign-in</a>
+      <div class="btnLogin">
+      <button class="btnLogin-popup">Connect</button> </div>
     </header>
-    <main>
-      <div class="post-form">
-        <h2>Share a post</h2>
-        <form method="POST" enctype="multipart/form-data">
-          <textarea name="content" placeholder="Tell a story..."
-            required></textarea> <br>
-          <button class="send" type="submit" name="post">Post</button>
-        </form>
-      </div>
-    </main>
+
+
+
+    <div class="wrapper" >  	
+      <span class="close">
+        <img class="close" src="assets/close.png" alt="close" />
+      </span>
+      <input type="checkbox" id="chk" aria-hidden="true">
+
+        <div class="signup">
+          <form>
+            <label for="chk" aria-hidden="true">Sign up</label>
+            <input type="text" name="txt" class="signupPH" placeholder="User name" required>
+            <input type="email" name="email" class="signupPH" placeholder="Email" required>
+            <input type="password" name="pswd" class="signupPH" placeholder="Password" required>
+            <button class="btnPopup1">Sign up</button>
+          </form>
+        </div>
+
+        <div class="login">
+          <form>
+            <label for="chk" aria-hidden="true">Login</label>
+            <input type="email" name="email" placeholder="Email" required="">
+            <input type="password" name="pswd" placeholder="Password" required="">
+            <button class='btnPopup2'>Login</button>
+          </form>
+        </div>
+    </div> 
+
+    <div class="navigation">
+      <ul>
+        <div class="big-link">
+        <li>
+          <img src="assets/home.png" alt="home page" />
+          <a href="#" class="nav-link">Home</a></li> </div>
+        <div class="big-link">
+        <li>
+          <img src="assets/heart.png" alt="liked posts" />
+          <a href="#" class="nav-link">Liked</a></li></div>
+        <div class="big-link">
+        <li>
+          <img src="assets/follow.png" alt="following people" />
+          <a href="#" class="nav-link">Following</a></li></div>
+        <div class="big-link">
+        <li>
+          <img src="assets/category.png" alt="following people" />
+          <a id="arrow" href="#" class="tree">Category</a>
+          <img id="down"src="assets/down.png" alt="down more" /></li>
+          <ul class="dropdown"> 
+            <li><a href="#" class="nav-link">Music</a></li>
+            <li><a href="#" class="nav-link">Drawings</a></li>
+            <li><a href="#" class="nav-link">Quotes</a></li>
+            <li><a href="#" class="nav-link">Games</a></li>
+            <li><a href="#" class="nav-link">Anime</a></li>
+            <li><a href="#" class="nav-link">Coding</a></li>
+          </ul>
+      </ul>
+      <!--links to home, liked, following-->
+      
+    </div>
+       
+       
+    <script src="script.js"></script>
   </body>
 </html>

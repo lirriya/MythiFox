@@ -1,4 +1,4 @@
-<!-- <?php
+<?php
 session_start();
 
 $conn = new mysqli("localhost", "root", "", "login");
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "Invalid username or password";
     }
 }
-?> -->
+?>
 
 <!DOCTYPE html>
 <html lang="en">

@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<!-- <?php
+<?php
 $conn = new mysqli("localhost", "root", "", "login");
 
 if ($conn->connect_error) {
@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $stmt->close();
 }
-?> -->
+?> 
 
 <div class="form-container">
     <form method="POST" action="">
