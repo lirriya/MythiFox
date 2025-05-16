@@ -53,7 +53,7 @@ $user = $result->fetch_assoc();
         <strong>Joined:</strong> <?php echo date("F j, Y", strtotime($user['created_at'])); ?>
       </p>
       <form action="edit_profile.php" method="get" class="edit-form">
-        <button type="submit" class="btnLogin-popup">Edit Profile</button>
+        <button type="submit" class="edit">Edit Profile</button>
       </form>
     </div>
   </div>
