@@ -14,7 +14,8 @@ main {
     width: 150px;
 }
 .header {
-    position: relative;
+    position: fixed;
+    top: 0;
     width: 100%;
     height: 80px;
     background: #64485c;
@@ -25,6 +26,32 @@ main {
     z-index: 99;
     border-bottom: solid 2px #2e1114;
 }
+
+
+/*********** HEADER.PHP ***********/
+.header .user-icon{
+  margin-right: 15px;
+}
+
+.header .user-icon img{
+    width: 30px;
+    height: 30px;
+    margin-top: 20px;
+    
+}
+
+.name {
+      opacity: 0;
+      margin-top: 0px;
+      font-size: 16px;
+      color: #83677b;
+      transition: opacity 0.3s;
+    }
+
+.user-icon:hover .name {
+      opacity: 1;
+    }
+
 
 .search-form{
     width: 10%;
@@ -102,7 +129,7 @@ main {
 }
 
 
-/**********************************************************/
+/*********** SIDEBAR.PHP ***********/
 .navigation{
     margin-top: 80px;
     position: fixed;
@@ -132,6 +159,19 @@ main {
     
     }
 
+    .navigation .tree {
+    cursor: pointer;
+    padding-left: 10px;
+    color: #83677b;
+    transition: .5s;
+}
+
+    .navigation .tree:hover {
+    font-size: 20px;
+    color: #2e1114;
+  }
+
+
     .navigation .big-link a:hover{
         font-size: 20px;
         color: #2e1114;
@@ -144,19 +184,16 @@ main {
         font-size: 18px;
     }
 
-    
-    .navigation .dropdown li{
+    /** dropdown for category **/
+   .navigation .dropdown{
+        background-color: #83677b;
+        border-radius: 15px;
+        padding-left: 2px;
+        padding-right: 2px;
+        transition: 1s ease-in-out;
         display: none;
-        padding: 0px 3px 14px 45px;
-        position: relative;
-        padding: 2;
-        
-        
     }
 
-    .navigation .dropdown.show li {
-        display: block;
-    }
 
     .navigation .dropdown a{
         font-size: 15px;
@@ -168,19 +205,23 @@ main {
         color: #a3859c;
     }
 
-    .navigation .dropdown{
-        background-color: #83677b;
-        border-radius: 15px;
-        padding-left: 2px;
-        padding-right: 2px;
-        transition: 1s ease-in-out;
+     .navigation .dropdown li{
+        padding: 0px 3px 14px 45px;
+        position: relative;
+        padding: 2;
+    }
+    .navigation .dropdown.show {
+        display: block;
     }
     
 
-/**********************************************************/
+/****POP-UP SIGN-IN/REGISTRATION IN INDEX.PHP***/
 .wrapper{
         margin-top: 20px;
-        position: relative;
+        position: fixed;
+        top: 15%; 
+        left: 37%;
+        transform: translate(-50%, -50%);
         width: 350px;
         height: 500px;
         background: #501B1D;
@@ -313,5 +354,115 @@ main {
 
 
 
+/*********** PROFILE.PHP ***********/
 
-   
+
+
+.profile {
+    position: relative;
+    width: 1000px;
+    height: 900px;
+    border-radius: 10px;
+    padding: 20px;
+    overflow: hidden;
+    z-index: 0;
+    margin: 6% auto 0;
+}
+
+
+.profile::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url(bg.jpg) no-repeat center center;
+    background-size: cover;
+    filter: blur(5px) brightness(0.6); 
+    z-index: -1;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-pic {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #83677b;
+}
+
+.username {
+  color: #eee;
+  margin: 0;
+}
+
+.bio {
+  color: #cdcbcb;
+  margin-top: 10px;
+}
+
+.joined {
+  color: #aaa;
+  margin-top: 10px;
+}
+
+.edit-form {
+  margin-top: 15px;
+}
+
+.user-posts {
+  margin-top: 40px;
+}
+
+.user-posts h3 {
+  color: #eee;
+}
+
+.user-posts p {
+  color: #cdcbcb;
+}
+
+
+/*********** POST.PHP ***********/
+
+
+.create-post{
+  margin: 6% auto 0;
+  width: 1000px;
+  background-color: #83677b;
+  border-radius: 5px;
+}
+
+.create-post-input{
+  padding: 20px 25px 10px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.create-post-input img{
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin-right: 10px;
+
+}
+
+.create-post-input textarea{
+  width: 100%;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: transparent;
+  margin-top: 8px;
+}
+
+.create-post-input textarea::placeholder{
+  color: #9f8a9a;
+  font-size: 14px;
+}

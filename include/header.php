@@ -11,6 +11,11 @@ if (session_status() === PHP_SESSION_NONE) {
   </div>
 
   <?php if (isset($_SESSION['user'])): ?>
+          <span class="user-icon">
+            <a href="profile.php"><img src="assets/user.png" alt="user profile" /> </a>
+            <p class="name"><?php echo htmlspecialchars($_SESSION['user']); ?></p>
+          </span>
+        
     <div class="btnLogin">
       <form action="./authentication/logout.php" method="POST">
         <button type="submit" class="logout">Logout</button>

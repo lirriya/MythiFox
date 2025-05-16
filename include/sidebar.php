@@ -8,7 +8,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <div class="big-link">
       <li>
         <img src="assets/home.png" alt="home page" />
-        <a href="#" class="nav-link">Home</a>
+        <a href="index.php" class="nav-link">Home</a>
       </li>
     </div>
     <div class="big-link">
@@ -26,7 +26,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <div class="big-link">
       <li>
         <img src="assets/category.png" alt="categories" />
-        <a id="arrow" href="#" class="tree">Category</a>
+        <span id="arrow" class="tree">Category</span>
         <img id="down" src="assets/down.png" alt="down more" />
       </li>
       <ul class="dropdown"> 

@@ -1,3 +1,10 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,9 +17,13 @@
     
   </head>
   <body>
-  
+    
   <?php include 'include/header.php'; ?>
-  <?php include 'include/sidebar.php'; ?>
+  <?php include 'include/sidebar.php'; ?>  
+
+  <?php if (isset($_SESSION['user'])): ?>
+    <?php include 'include/makePost.php'; ?>
+    <?php endif; ?>
 
 
     <div class="wrapper" >  	
