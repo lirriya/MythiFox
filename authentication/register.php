@@ -18,9 +18,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $stmt->close();
 
-    $_SESSION['user'] = $username; // ✅ match with header.php
+    $_SESSION['user'] = $username; 
     header("Location: ../index.php");
-    exit(); // ✅ go back to home after registration
+    exit(); 
    
 }
 ?>

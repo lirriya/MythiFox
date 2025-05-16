@@ -353,23 +353,94 @@ main {
 
 
 
+/*********** SHOWING POSTS IN INDEX.PHP ***********/
+.posts-list {
+  background-color: #d8cbd1;
+  padding: 2rem 1rem; 
+}
+
+.post {
+  background-color: #5e3a4d;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px #4a1a1d;
+  transition: background 0.3s;
+  width: 100%;
+  max-width: 950px;
+  margin: 2% auto 0;
+  padding: 1.2rem;
+  box-sizing: border-box;
+}
+
+.post:hover {
+  background-color: #632a3a; 
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.profile-pic-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4a1a1d;
+}
+
+
+.username-post{
+  color: #f3e1eb;
+  font-weight: bold;
+  text-shadow: 0 0 2px #4a1a1d; 
+  font-size: 2rem;
+}
+
+.post-date {
+  margin-left: auto;
+  color: #ccb6c5;
+  font-size: 0.85rem;
+}
+
+.post-category {
+  color: #d1aac3;
+  font-style: italic;
+  margin-bottom: 0.8rem;
+}
+
+.post-content {
+  color: #f0d8e2;
+  line-height: 1.5;
+  white-space: pre-line;
+  margin-bottom: 0.8rem;
+}
+
+.post-image img {
+  max-width: 100%;
+  border-radius: 8px;
+  border: 1px solid #4a1a1d;
+  display: block;
+  margin: 0 auto;
+}
 
 /*********** PROFILE.PHP ***********/
 main.profile {
   margin: 6% auto 0;
   padding: 2rem;
   max-width: 800px;
-  background-color: #3b2735; /* matches mysterious sidebar */
+  background-color: #3b2735; 
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  color: #f2e6ec; /* soft warm text */
+  color: #f2e6ec; 
 }
 
 .profile-header {
   display: flex;
   align-items: center;
   gap: 2rem;
-  border-bottom: 1px solid #6b475e; /* mauve-pink soft border */
+  border-bottom: 1px solid #6b475e; 
   padding-bottom: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -384,7 +455,7 @@ main.profile {
 
 .username {
   font-size: 2rem;
-  color: #e6bfd5; /* elegant and visible */
+  color: #e6bfd5; 
   margin: 0 0 0.5rem;
 }
 
@@ -399,7 +470,7 @@ main.profile {
 }
 
 .edit {
-  background-color: #8c5e74; /* soft mauve */
+  background-color: #8c5e74; 
   color: #fceff4;
   border: none;
   padding: 0.5rem 1rem;
@@ -514,3 +585,4 @@ main.profile {
 .btnPost:hover {
   background-color: #9b4d6f; 
 }
+

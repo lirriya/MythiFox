@@ -1,21 +1,23 @@
 <?php
 session_start();
 
-// Redirect if not logged in
-if (!isset($_SESSION['user'])) {
-    header("Location: index.php");
-    exit();
-}
-
-// Connect to DB
 $conn = new mysqli("localhost", "root", "", "MythiFox");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get user info
-$username = $_SESSION['user'];
-$stmt = $conn->prepare("SELECT id, username, bio, profile_pic, `created_at` FROM users WHERE username = ?");
+
+if (isset($_GET['user'])) {
+    $username = $conn->real_escape_string($_GET['user']);
+} elseif (isset($_SESSION['user'])) {
+    $username = $conn->real_escape_string($_SESSION['user']);
+} else {
+    header("Location: index.php");
+    exit();
+}
+
+
+$stmt = $conn->prepare("SELECT id, username, bio, profile_pic, created_at FROM users WHERE username = ?");
 $stmt->bind_param("s", $username);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -26,6 +28,7 @@ if ($result->num_rows === 0) {
 }
 
 $user = $result->fetch_assoc();
+$isOwnProfile = isset($_SESSION['user']) && $_SESSION['user'] === $user['username'];
 ?>
 
 <!DOCTYPE html>
@@ -52,18 +55,39 @@ $user = $result->fetch_assoc();
       <p class="joined">
         <strong>Joined:</strong> <?php echo date("F j, Y", strtotime($user['created_at'])); ?>
       </p>
-      <form action="edit_profile.php" method="get" class="edit-form">
-        <button type="submit" class="edit">Edit Profile</button>
-      </form>
+
+      <?php if ($isOwnProfile): ?>
+        <form action="edit_profile.php" method="get" class="edit-form">
+          <button type="submit" class="edit">Edit Profile</button>
+        </form>
+      <?php endif; ?>
     </div>
   </div>
 
   <section class="user-posts">
-    <h3>Your Posts</h3>
-    <p>(Coming soon...)</p>
+    <h3><?php echo $isOwnProfile ? "Your Posts" : htmlspecialchars($user['username']) . "'s Posts"; ?></h3>
+
+    <?php
+    $uid = $user['id'];
+    $posts = $conn->query("SELECT * FROM posts WHERE user_id = $uid ORDER BY created_at DESC");
+
+    if ($posts && $posts->num_rows > 0) {
+        while ($post = $posts->fetch_assoc()) {
+            echo "<div class='post'>";
+            echo "<p>" . nl2br(htmlspecialchars($post['content'])) . "</p>";
+            if ($post['image']) {
+                echo "<img src='" . htmlspecialchars($post['image']) . "' alt='Post Image' class='post-image'>";
+            }
+            echo "<p class='post-date'>" . date('M d, Y H:i', strtotime($post['created_at'])) . "</p>";
+            echo "</div>";
+        }
+    } else {
+        echo "<p>This user hasn't posted anything yet.</p>";
+    }
+    ?>
   </section>
 </main>
 
-
+<script src="./assets/script.js"></script>
 </body>
 </html>
