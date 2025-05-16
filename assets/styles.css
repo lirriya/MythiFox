@@ -111,7 +111,7 @@ main {
     background-color: #8c6480;
     color: #f6eef2;
     border: none;
-    font-size: 11px;
+    font-size: 14px;
     align-items: center;
     transition: .5s;
     border-radius: 5px;
@@ -356,7 +356,7 @@ main {
 /*********** SHOWING POSTS IN INDEX.PHP ***********/
 .posts-list {
   background-color: #d8cbd1;
-  padding: 2rem 1rem; 
+  margin: 6% auto 0;
 }
 
 .post {
@@ -370,6 +370,8 @@ main {
   padding: 1.2rem;
   box-sizing: border-box;
 }
+
+
 
 .post:hover {
   background-color: #632a3a; 
@@ -417,12 +419,14 @@ main {
   margin-bottom: 0.8rem;
 }
 
-.post-image img {
-  max-width: 100%;
+.post-images  {
+  max-height: 700px;
+  max-width: 700px;
   border-radius: 8px;
   border: 1px solid #4a1a1d;
   display: block;
   margin: 0 auto;
+  object-fit: cover; 
 }
 
 /*********** PROFILE.PHP ***********/
@@ -567,6 +571,11 @@ main.profile {
 .create-post-links img {
   width: 28px;
   height: 28px;
+}
+
+.camera-label{
+  padding: 0;
+  margin: 0;
 }
 
 

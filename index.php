@@ -58,9 +58,7 @@ if (session_status() === PHP_SESSION_NONE) {
               <?php echo nl2br(htmlspecialchars($post['content'])); ?>
             </div>
             <?php if ($post['image']): ?>
-            <div class="post-image">
-              <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post image" />
-            </div>
+              <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post image" class="post-images" />
             <?php endif; ?>
           </div>
         <?php endwhile; ?>

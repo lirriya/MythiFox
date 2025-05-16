@@ -3,19 +3,16 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Check if user is logged in
 if (!isset($_SESSION['user'])) {
     echo '<p class="error">You must be logged in to post.</p>';
-    return; // Stop further execution
+    return; 
 }
 
-// Connect to DB
 $conn = new mysqli("localhost", "root", "", "MythiFox");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get user info
 $username = $_SESSION['user'];
 $stmt = $conn->prepare("SELECT id, profile_pic FROM users WHERE username = ?");
 $stmt->bind_param("s", $username);
@@ -35,17 +32,14 @@ $profile_pic = $user['profile_pic'];
 ?>
 
 <?php
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category = $_POST['category'] ?? '';
     $content = $_POST['content'] ?? '';
-    $created_at = date('Y-m-d H:i:s');
     $image_path = null;
 
     if (!$category || !$content) {
         echo '<p class="error">Please fill out all required fields.</p>';
     } else {
-        // Handle image upload
         if (!empty($_FILES['image']['name'])) {
             $upload_dir = 'uploads/';
             if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
@@ -60,10 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Insert into DB
-        $stmt = $conn->prepare("INSERT INTO posts (user_id, category, content, image, created_at) VALUES (?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO posts (user_id, category, content, image) VALUES (?, ?, ?, ?)");
         if ($stmt) {
-            $stmt->bind_param("issss", $user_id, $category, $content, $image_path, $created_at);
+            $stmt->bind_param("isss", $user_id, $category, $content, $image_path);
+
             if ($stmt->execute()) {
                 header("Location: ../index.php");
                 exit();
@@ -79,30 +73,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <section>
     <form action="include/makePost.php" method="post" enctype="multipart/form-data">
-    <div class="create-post">
-        <div class="create-post-input">
-            <img src="<?php echo htmlspecialchars($profile_pic); ?>" alt="Profile Picture" class="profile-pic">
-            <textarea name="content" id="content" rows="2" placeholder="Post something.." required></textarea>
-        </div>
+        <div class="create-post">
+            <div class="create-post-input">
+                <img src="<?php echo htmlspecialchars($profile_pic); ?>" alt="Profile Picture" class="profile-pic">
+                <textarea name="content" id="content" rows="2" placeholder="Post something.." required></textarea>
+            </div>
 
-        <div class="create-post-links">
-            <img src="assets/camera.png" alt="add photo" />
-            <div class="category">
-            <select name="category" id="category" required>
-                <option value="">-- Select Category --</option>
-                <option value="music">Music</option>
-                <option value="art">Art</option>
-                <option value="quotes">Quotes</option>
-                <option value="games">Games</option>
-                <option value="anime">Anime</option>
-                <option value="coding">Coding</option>
-            </select>
+            <div class="create-post-links">
+                <input type="file" name="image" id="image-upload" accept="image/*" style="display: none;" />
+                <label for="image-upload" class="camera-label">
+                    <img src="assets/camera.png" alt="add photo" />
+                </label>
+                <div class="category">
+                    <select name="category" id="category" required>
+                        <option value="">-- Select Category --</option>
+                        <option value="music">Music</option>
+                        <option value="art">Art</option>
+                        <option value="quotes">Quotes</option>
+                        <option value="games">Games</option>
+                        <option value="anime">Anime</option>
+                        <option value="coding">Coding</option>
+                    </select>
+                </div>
+                <button type="submit" class="btnPost">Post</button>
+            </div>
         </div>
-            <button type="submit" class="btnPost">Post</button>
-        </div>
-
-    
-    </div>
-</form>
-
+    </form>
 </section>

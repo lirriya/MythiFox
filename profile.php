@@ -6,7 +6,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-
 if (isset($_GET['user'])) {
     $username = $conn->real_escape_string($_GET['user']);
 } elseif (isset($_SESSION['user'])) {
@@ -15,7 +14,6 @@ if (isset($_GET['user'])) {
     header("Location: index.php");
     exit();
 }
-
 
 $stmt = $conn->prepare("SELECT id, username, bio, profile_pic, created_at FROM users WHERE username = ?");
 $stmt->bind_param("s", $username);
@@ -43,7 +41,7 @@ $isOwnProfile = isset($_SESSION['user']) && $_SESSION['user'] === $user['usernam
 <?php include 'include/header.php'; ?>
 <?php include 'include/sidebar.php'; ?>
 
-<main class="profile">
+<main class="profile" style="margin: 6% auto 0;">
   <div class="profile-header">
     <img src="<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile Picture" class="profile-pic">
     <div>
@@ -69,17 +67,34 @@ $isOwnProfile = isset($_SESSION['user']) && $_SESSION['user'] === $user['usernam
 
     <?php
     $uid = $user['id'];
-    $posts = $conn->query("SELECT * FROM posts WHERE user_id = $uid ORDER BY created_at DESC");
+
+    $posts = $conn->query("
+        SELECT posts.*, users.username, users.profile_pic 
+        FROM posts 
+        JOIN users ON posts.user_id = users.id 
+        WHERE posts.user_id = $uid 
+        ORDER BY posts.created_at DESC
+    ");
 
     if ($posts && $posts->num_rows > 0) {
         while ($post = $posts->fetch_assoc()) {
             echo "<div class='post'>";
-            echo "<p>" . nl2br(htmlspecialchars($post['content'])) . "</p>";
-            if ($post['image']) {
-                echo "<img src='" . htmlspecialchars($post['image']) . "' alt='Post Image' class='post-image'>";
-            }
-            echo "<p class='post-date'>" . date('M d, Y H:i', strtotime($post['created_at'])) . "</p>";
+
+            echo "<div class='post-header'>";
+            echo "<img src='" . htmlspecialchars($post['profile_pic']) . "' alt='Profile Pic' class='profile-pic-small' />";
+            echo "<a href='profile.php?user=" . urlencode($post['username']) . "' class='username-post'>" . htmlspecialchars($post['username']) . "</a>";
+            echo "<span class='post-date'>" . date('M d, Y H:i', strtotime($post['created_at'])) . "</span>";
             echo "</div>";
+
+            echo "<div class='post-category'>Category: " . htmlspecialchars($post['category']) . "</div>";
+
+            echo "<div class='post-content'>" . nl2br(htmlspecialchars($post['content'])) . "</div>";
+
+            if (!empty($post['image'])) {
+                echo "<img src='" . htmlspecialchars($post['image']) . "' alt='Post image' class='post-images' />";
+            }
+
+            echo "</div>"; 
         }
     } else {
         echo "<p>This user hasn't posted anything yet.</p>";
