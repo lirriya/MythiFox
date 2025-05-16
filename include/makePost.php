@@ -1,4 +1,13 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Check if user is logged in
+if (!isset($_SESSION['user'])) {
+    echo '<p class="error">You must be logged in to post.</p>';
+    return; // Stop further execution
+}
 
 // Connect to DB
 $conn = new mysqli("localhost", "root", "", "MythiFox");
@@ -8,14 +17,21 @@ if ($conn->connect_error) {
 
 // Get user info
 $username = $_SESSION['user'];
-$stmt = $conn->prepare("SELECT id, username, profile_pic FROM users WHERE username = ?");
+$stmt = $conn->prepare("SELECT id, profile_pic FROM users WHERE username = ?");
 $stmt->bind_param("s", $username);
 $stmt->execute();
 $result = $stmt->get_result();
 
 $user = $result->fetch_assoc();
+
+if (!$user) {
+    echo '<p class="error">User not found in database.</p>';
+    return;
+}
+
 $user_id = $user['id'];
 $profile_pic = $user['profile_pic'];
+
 ?>
 
 <?php
@@ -49,7 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($stmt) {
             $stmt->bind_param("issss", $user_id, $category, $content, $image_path, $created_at);
             if ($stmt->execute()) {
-                echo '<p class="success">Post created successfully!</p>';
+                header("Location: ../index.php");
+                exit();
             } else {
                 echo '<p class="error">Something went wrong. Please try again.</p>';
             }
@@ -61,33 +78,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <section>
+    <form action="include/makePost.php" method="post" enctype="multipart/form-data">
     <div class="create-post">
         <div class="create-post-input">
             <img src="<?php echo htmlspecialchars($profile_pic); ?>" alt="Profile Picture" class="profile-pic">
             <textarea name="content" id="content" rows="2" placeholder="Post something.." required></textarea>
         </div>
+
         <div class="create-post-links">
-            <li><img src="assets/camera.png" alt="add photo" /></li>
+            <img src="assets/camera.png" alt="add photo" />
+            <div class="category">
+            <select name="category" id="category" required>
+                <option value="">-- Select Category --</option>
+                <option value="music">Music</option>
+                <option value="art">Art</option>
+                <option value="quotes">Quotes</option>
+                <option value="games">Games</option>
+                <option value="anime">Anime</option>
+                <option value="coding">Coding</option>
+            </select>
         </div>
+            <button type="submit" class="btnPost">Post</button>
+        </div>
+
     
     </div>
-    
+</form>
 
-
-  <form action="makePost.php" method="post" enctype="multipart/form-data">
-    
-    <select name="category" id="category" required>
-      <option value="">-- Select Category --</option>
-      <option value="music">Music</option>
-      <option value="art">Art</option>
-      <option value="quotes">Quotes</option>
-      <option value="games">Games</option>
-      <option value="anime">Anime</option>
-      <option value="coding">Coding</option>
-    </select>
-
-    <input type="file" name="image" id="image" accept="image/*">
-
-    <button type="submit" class="btnPost">Post</button>
-  </form>
 </section>
