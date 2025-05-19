@@ -35,7 +35,7 @@ $user = $stmt->get_result()->fetch_assoc();
     <form action="update_profile.php" method="POST" enctype="multipart/form_data">
 
         <label for="username">Username:</label><br />
-        <input type="text" id="username" name=username" value="<?php echo htmlspecialchars($user['username']); ?>" required /><br /><br />
+        <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required /><br /><br />
 
         <label for="email">Email:</label><br />
         <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required /><br /><br />
