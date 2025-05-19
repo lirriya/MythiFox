@@ -366,7 +366,7 @@ main {
   transition: background 0.3s;
   width: 100%;
   max-width: 950px;
-  margin: 2% auto 0;
+  margin: 5% auto 0;
   padding: 1.2rem;
   box-sizing: border-box;
 }
@@ -595,3 +595,6 @@ main.profile {
   background-color: #9b4d6f; 
 }
 
+h2.cat {
+  margin: 6% 7% 0;
+}

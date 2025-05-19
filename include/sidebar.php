@@ -30,12 +30,12 @@ if (session_status() === PHP_SESSION_NONE) {
         <img id="down" src="assets/down.png" alt="down more" />
       </li>
       <ul class="dropdown"> 
-        <li><a href="#" class="nav-link">Music</a></li>
-        <li><a href="#" class="nav-link">Drawings</a></li>
-        <li><a href="#" class="nav-link">Quotes</a></li>
-        <li><a href="#" class="nav-link">Games</a></li>
-        <li><a href="#" class="nav-link">Anime</a></li>
-        <li><a href="#" class="nav-link">Coding</a></li>
+        <li><a href="posts.php?category=Music" class="nav-link">Music</a></li>
+        <li><a href="posts.php?category=Drawings" class="nav-link">Drawings</a></li>
+        <li><a href="posts.php?category=Quotes" class="nav-link">Quotes</a></li>
+        <li><a href="posts.php?category=Games" class="nav-link">Games</a></li>
+        <li><a href="posts.php?category=Anime" class="nav-link">Anime</a></li>
+        <li><a href="posts.php?category=Coding" class="nav-link">Coding</a></li>
       </ul>
     </div>
   </ul>
