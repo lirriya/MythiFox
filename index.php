@@ -30,9 +30,7 @@ if (session_status() === PHP_SESSION_NONE) {
     }
 
     $sql = "SELECT posts.*, users.username, users.profile_pic 
-            FROM posts 
-            JOIN users ON posts.user_id = users.id 
-            ORDER BY posts.created_at DESC";
+    FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC";
 
     $result = $conn->query($sql);
 

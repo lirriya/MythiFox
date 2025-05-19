@@ -593,8 +593,10 @@ main.profile {
 
 .btnPost:hover {
   background-color: #9b4d6f; 
+ 
 }
 
-h2.cat {
-  margin: 6% 7% 0;
+.posts {
+  color: #3b1f2b;
+  margin: 7% 14% 0;
 }

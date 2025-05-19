@@ -15,7 +15,12 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT * FROM posts WHERE category = ? ORDER BY created_at DESC";
+$sql = "SELECT posts.*, users.username, users.profile_pic 
+        FROM posts 
+        JOIN users ON posts.user_id = users.id 
+        WHERE posts.category = ? 
+        ORDER BY posts.created_at DESC";
+
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $category); // "s" means string
 $stmt->execute();
@@ -39,25 +44,32 @@ $posts = $result->fetch_all(MYSQLI_ASSOC);
   <body>
     <?php include 'include/header.php'; ?>
     <?php include 'include/sidebar.php'; ?>  
-    <h2 class="cat">Category: <?php echo htmlspecialchars($category); ?></h2>
+    <div class="posts">
+    <h2>Category: <?php echo htmlspecialchars($category); ?></h2>
+    <?php if (count($posts) === 0): ?>
+    <p>No posts found in this category.</p>
+    <?php endif; ?>
+    </div>
+    </div>
+    <div class="posts-list">
+    <?php foreach ($posts as $post): ?>  
+        <div class="post">
+            <div class="post-header">
+              <img src="<?php echo htmlspecialchars($post['profile_pic']); ?>" alt="Profile Pic" class="profile-pic-small"/>
+              <a href="profile.php?user=<?php echo urlencode($post['username']); ?>" class="username-post">
+                <?php echo htmlspecialchars($post['username']); ?></a>
+              <span class="post-date"><?php echo date('M d, Y H:i', strtotime($post['created_at'])); ?></span>
+            </div>
+            <div class="post-content">
+              <?php echo nl2br(htmlspecialchars($post['content'])); ?>
+            </div>
+            <?php if ($post['image']): ?>
+              <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post image" class="post-images" />
+            <?php endif; ?>
+          </div>
+    <?php endforeach; ?>
+    </div>
     
-    <?php foreach ($posts as $post) {  
-    echo "<div class='post'>";
-    echo "<p>" . htmlspecialchars($post['content']) . "</p>";
-
-    if (!empty($post['image'])) {
-        echo "<img src='uploads/" . htmlspecialchars($post['image']) . "' alt='Post Image'>";
-    }
-
-    echo "<p><em>Posted on " . htmlspecialchars($post['created_at']) . "</em></p>";
-    echo "</div>";
-}
-?>
-<?php if (count($posts) === 0): ?>
-  <p>No posts found in this category.</p>
-<?php endif; ?>
-
-
 
     <script src="./assets/script.js"></script>
   </body>
