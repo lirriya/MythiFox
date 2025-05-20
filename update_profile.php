@@ -79,5 +79,3 @@ if ($stmt->execute()) {
 } else {
     die("Error updating profile: " . $conn->error);
 }
-
-$conn->close();
