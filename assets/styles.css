@@ -600,3 +600,36 @@ main.profile {
   color: #3b1f2b;
   margin: 7% 14% 0;
 }
+
+.post-actions {
+    margin-top: 10px;
+}
+
+.edit-btn, .delete-btn {
+    font-size: 0.9rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+.edit-btn {
+    color: #fff;
+    background-color: #9b4d6f;
+    border: none;
+}
+
+.edit-btn:hover {
+    background-color: #fff;
+}
+
+.delete-btn {
+    color: #fff;
+    background-color: #dc3545;
+    border: none;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
