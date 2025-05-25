@@ -58,6 +58,15 @@ if (session_status() === PHP_SESSION_NONE) {
             <?php if ($post['image']): ?>
               <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post image" class="post-images" />
             <?php endif; ?>
+            <?php if (isset($_SESSION['user']) && $_SESSION['user'] === $post['username']): ?>
+              <div class="post-actions">
+                <a href="edit_post.php?id=<?php echo $post['id']; ?>" class="edit-btn">Edit</a>
+                <form method="POST" action="delete_post.php" onsubmit="return confirm('Are you sure you want to delete this post?');" style="display:inline;">
+                  <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+                  <button type="submit" class="delete-btn">Delete</button>
+                </form>
+              </div>
+            <?php endif; ?>
           </div>
         <?php endwhile; ?>
       </div>
