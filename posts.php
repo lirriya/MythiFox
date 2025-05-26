@@ -5,9 +5,10 @@ if (session_status() == PHP_SESSION_NONE) {
 ?>
 
 <?php
-$category = isset($_GET['category']) ? $_GET['category'] : null;
-$valid_categories = ['Music', 'Art', 'Quotes', 'Games', 'Anime', 'Coding'];
+$category = isset($_GET['category']) ? $_GET['category'] : null;    //on récupère la catégorie depuis l'URL (null si non fournie)
+$valid_categories = ['Music', 'Art', 'Quotes', 'Games', 'Anime', 'Coding'];   //liste des catégories valides
 
+//on redirige vers la page des posts si il n y'q pas de catégorie ou catégorie invalide 
 if (!$category || !in_array($category, $valid_categories)) {
   header("Location: posts.php");
   exit();
@@ -15,9 +16,10 @@ if (!$category || !in_array($category, $valid_categories)) {
 
 $conn = new mysqli("localhost", "root", "", "MythiFox");
 if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
+  die("Connection failed: " . $conn->connect_error);    //vérification si la connexion échoue
 }
 
+//préparation de la requête SQL pour récupérer les posts de la catégorie choisie
 $query = "SELECT posts.*, users.username, users.profile_pic FROM posts JOIN users ON posts.user_id = users.id WHERE posts.category = ? ORDER BY posts.created_at DESC";
 
 $stmt = $conn->prepare($query);
