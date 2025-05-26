@@ -1,81 +1,81 @@
-window.addEventListener("DOMContentLoaded", () => {
-  // Show login error alerts
+window.addEventListener("DOMContentLoaded", function () {
   if (typeof loginError !== "undefined") {
-    switch (loginError) {
-      case "username":
-        alert("Username not found. Please check your spelling or sign up first.");
-        break;
-      case "password":
-        alert("Incorrect password. Try again or reset your password.");
-        break;
-      case "usertaken":
-        alert("This username is already taken. Please choose another.");
-        break;
+    if (loginError === "username") {
+      alert("Username not found. Please check your spelling or sign up first.");
+    } else if (loginError === "password") {
+      alert("Incorrect password. Try again or reset your password.");
+    } else if (loginError === "usertaken") {
+      alert("This username is already taken. Please choose another.");
     }
   }
 
-  // Popup toggle for login/signup
-  const wrapper = document.querySelector('.wrapper');
-  const btnPopup = document.querySelector('.btnLogin-popup');
-  const closeBtn = document.querySelector('.close');
-  const downButton = document.getElementById('arrow');
-  const dropdownMenu = document.querySelector('.navigation .dropdown');
+  var wrapper = document.querySelector(".wrapper");
+  var loginBtn = document.querySelector(".btnLogin-popup");
+  var closeBtn = document.querySelector(".close");
+  var arrowBtn = document.getElementById("arrow");
+  var dropdown = document.querySelector(".navigation .dropdown");
 
-  if (btnPopup) {
-    btnPopup.addEventListener('click', () => {
-      wrapper.classList.add('active-popup');
+  if (loginBtn) {
+    loginBtn.addEventListener("click", function () {
+      wrapper.classList.add("active-popup");
     });
   }
 
   if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      wrapper.classList.remove('active-popup');
+    closeBtn.addEventListener("click", function () {
+      wrapper.classList.remove("active-popup");
     });
   }
 
-  if (downButton && dropdownMenu) {
-    downButton.addEventListener('click', () => {
-      dropdownMenu.classList.toggle('show');
+  if (arrowBtn && dropdown) {
+    arrowBtn.addEventListener("click", function () {
+      dropdown.classList.toggle("show");
     });
   }
 
-  // Profile form toggle
-  const toggleBtn = document.getElementById("toggleEditBtn");
-  const form = document.getElementById("epf-form");
+  var editToggle = document.getElementById("toggleEditBtn");
+  var editForm = document.getElementById("epf-form");
 
-  if (toggleBtn && form) {
-    toggleBtn.addEventListener("click", () => {
-      const isVisible = form.classList.contains("epf-hidden");
-      form.classList.toggle("epf-hidden");
-      toggleBtn.textContent = isVisible ? "Close" : "Edit Profile";
+  if (editToggle && editForm) {
+    editToggle.addEventListener("click", function () {
+      if (editForm.classList.contains("epf-hidden")) {
+        editForm.classList.remove("epf-hidden");
+        editToggle.textContent = "Close";
+      } else {
+        editForm.classList.add("epf-hidden");
+        editToggle.textContent = "Edit Profile";
+      }
     });
   }
 
-  // Handle in-place editing
-  const editButtons = document.querySelectorAll('.edit-btn');
-  editButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const postId = btn.dataset.postId;
-      const contentDiv = document.getElementById('content-' + postId);
-      const text = contentDiv.innerText.trim();
-      contentDiv.innerHTML = `<textarea name="content" rows="4" style="width:100%;">${text}</textarea>`;
+  var allEditButtons = document.querySelectorAll(".edit-btn");
 
-      // Show Save button
-      const saveBtn = document.querySelector(`.save-btn[data-post-id="${postId}"]`);
-      if (saveBtn) saveBtn.style.display = 'inline';
+  allEditButtons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var postId = btn.dataset.postId;
+      var contentBox = document.getElementById("content-" + postId);
+      var text = contentBox.innerText.trim();
 
-      // Show the update form
-      const form = document.getElementById('form-' + postId);
-      if (form) form.style.display = 'block';
+      contentBox.innerHTML = '<textarea name="content" rows="4" style="width:100%;">' + text + '</textarea>';
+
+      var saveButton = document.querySelector('.save-btn[data-post-id="' + postId + '"]');
+      if (saveButton) {
+        saveButton.style.display = "inline";
+      }
+
+      var updateForm = document.getElementById("form-" + postId);
+      if (updateForm) {
+        updateForm.style.display = "block";
+      }
     });
   });
 
-  // Confirm delete with a dialog
-  const deleteForms = document.querySelectorAll('.delete-form');
-  deleteForms.forEach(form => {
-    form.addEventListener('submit', (e) => {
-      const confirmDelete = confirm('Are you sure you want to delete this post?');
-      if (!confirmDelete) {
+  var allDeleteForms = document.querySelectorAll(".delete-form");
+
+  allDeleteForms.forEach(function (form) {
+    form.addEventListener("submit", function (e) {
+      var confirmIt = confirm("Are you sure you want to delete this post?");
+      if (!confirmIt) {
         e.preventDefault();
       }
     });
