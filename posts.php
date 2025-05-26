@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 ?>
 <?php 
 $category = $_GET['category'] ?? null;
-$valid_categories = ['Music', 'Drawings', 'Quotes', 'Games', 'Anime', 'Coding'];
+$valid_categories = ['Music', 'Art', 'Quotes', 'Games', 'Anime', 'Coding'];
 if (!$category || !in_array($category, $valid_categories)) {
     header("Location: posts.php"); // Or show default content
     exit;

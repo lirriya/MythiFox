@@ -31,7 +31,7 @@ if (session_status() === PHP_SESSION_NONE) {
       </li>
       <ul class="dropdown"> 
         <li><a href="posts.php?category=Music" class="nav-link">Music</a></li>
-        <li><a href="posts.php?category=Drawings" class="nav-link">Drawings</a></li>
+        <li><a href="posts.php?category=Art" class="nav-link">Art</a></li>
         <li><a href="posts.php?category=Quotes" class="nav-link">Quotes</a></li>
         <li><a href="posts.php?category=Games" class="nav-link">Games</a></li>
         <li><a href="posts.php?category=Anime" class="nav-link">Anime</a></li>

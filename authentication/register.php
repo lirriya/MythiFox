@@ -10,8 +10,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $hash = password_hash($password, PASSWORD_DEFAULT);
+    // Check if username already exists
+    $check = $conn->prepare("SELECT id FROM users WHERE username = ?");
+    $check->bind_param("s", $username);
+    $check->execute();
+    $check->store_result();
 
+    if ($check->num_rows > 0) {
+        // Username taken
+        header("Location: ../index.php?error=usertaken");
+        exit();
+    }
+
+    $check->close();
+
+    // Proceed with registration
+    $hash = password_hash($password, PASSWORD_DEFAULT);
     $sql = "INSERT INTO users (username, pwd) VALUES (?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ss", $username, $hash);
@@ -21,6 +35,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['user'] = $username; 
     header("Location: ../index.php");
     exit(); 
-   
 }
 ?>
+
