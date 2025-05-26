@@ -32,35 +32,43 @@ $sql = "SELECT posts.*, users.username, users.profile_pic FROM posts JOIN users 
 $result = $conn->query($sql);
 ?>
 
+<!-- Vérifie s'il y a des posts à afficher -->
 <?php if ($result && $result->num_rows > 0): ?>
   <div class="posts-list">
     <?php while ($post = $result->fetch_assoc()): ?>
       <div class="post" data-post-id="<?php echo $post['id']; ?>">
         <div class="post-header">
           <img src="<?php echo htmlspecialchars($post['profile_pic']); ?>" alt="Profile Pic" class="profile-pic-small">
+          <!-- Lien vers le profil de l'utilisateur -->
           <a href="profile.php?user=<?php echo urlencode($post['username']); ?>" class="username-post">
             <?php echo htmlspecialchars($post['username']); ?>
           </a>
+          <!-- Date de création du post -->
           <span class="post-date"><?php echo date('M d, Y H:i', strtotime($post['created_at'])); ?></span>
         </div>
 
+        <!-- Catégorie du post -->
         <div class="post-category">
           Category: <?php echo htmlspecialchars($post['category']); ?>
         </div>
 
+        <!-- Contenu du post -->
         <div class="post-content">
           <?php echo nl2br(htmlspecialchars($post['content'])); ?>
         </div>
 
+        <!-- Si une image est attachée au post -->
         <?php if (!empty($post['image'])): ?>
           <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post image" class="post-images">
         <?php endif; ?>
 
+        <!-- Si l'utilisateur connecté est l'auteur du post on lui affiche les options d'édition -->
         <?php if (isset($_SESSION['user']) && $_SESSION['user'] === $post['username']): ?>
           <div class="post-actions">
             <button id="toggleEditBtn" class="edit">Edit Post</button>
 
             <div class="epf-group">
+              <!-- Formulaire pour enregistrer les modifications -->
               <form id="epf-form" method="POST" action="./include/update_post.php" class="epf-hidden">
                 <textarea name="content" rows="3" style="width: 100%;"><?php echo htmlspecialchars($post['content']); ?></textarea>
                 <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
@@ -68,6 +76,7 @@ $result = $conn->query($sql);
               </form>
             </div>
 
+            <!-- Formulaire pour supprimer le post -->
             <form method="POST" action="./include/delete_post.php" onsubmit="return confirm('Are you sure you want to delete this post?');" style="display:inline;">
               <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
               <button type="submit" class="delete-btn">Delete</button>
@@ -78,17 +87,20 @@ $result = $conn->query($sql);
     <?php endwhile; ?>
   </div>
 <?php else: ?>
+  <!-- Message si aucun post trouvé -->
   <p>No posts yet. Be the first to post!</p>
 <?php endif; ?>
 
 <?php $conn->close(); ?>
 
+<!-- Fenêtre d'inscription et de connexion -->
 <div class="wrapper">
   <span class="close">
     <img class="close" src="assets/close.png" alt="close">
   </span>
   <input type="checkbox" id="chk" aria-hidden="true">
 
+  <!-- Formulaire d'inscription -->
   <div class="signup">
     <form method="POST" action="./authentication/register.php">
       <label for="chk" aria-hidden="true">Sign up</label>
@@ -98,6 +110,7 @@ $result = $conn->query($sql);
     </form>
   </div>
 
+  <!-- Formulaire de connexion -->
   <div class="login">
     <form method="POST" action="./authentication/login.php">
       <label for="chk" aria-hidden="true">Login</label>
