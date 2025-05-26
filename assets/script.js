@@ -1,4 +1,5 @@
 window.addEventListener("DOMContentLoaded", function () {
+  //si une variable d'erreur de login existe, affiche un message d'alerte adapté
   if (typeof loginError !== "undefined") {
     if (loginError === "username") {
       alert("Username not found. Please check your spelling or sign up first.");
@@ -9,30 +10,35 @@ window.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  //sélectionne les éléments importants dans la page
   var wrapper = document.querySelector(".wrapper");
   var loginBtn = document.querySelector(".btnLogin-popup");
   var closeBtn = document.querySelector(".close");
   var arrowBtn = document.getElementById("arrow");
   var dropdown = document.querySelector(".navigation .dropdown");
 
+  //ouvre la fenêtre popup de login
   if (loginBtn) {
     loginBtn.addEventListener("click", function () {
       wrapper.classList.add("active-popup");
     });
   }
 
+  //ferme la fenêtre popup de login
   if (closeBtn) {
     closeBtn.addEventListener("click", function () {
       wrapper.classList.remove("active-popup");
     });
   }
 
+  //ouvre ou ferme le menu déroulant des catégories
   if (arrowBtn && dropdown) {
     arrowBtn.addEventListener("click", function () {
       dropdown.classList.toggle("show");
     });
   }
 
+  //gère l'affichage du formulaire d'édition du profil
   var editToggle = document.getElementById("toggleEditBtn");
   var editForm = document.getElementById("epf-form");
 
@@ -48,6 +54,7 @@ window.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  //pour chaque bouton "éditer" d'un post, transforme le texte en zone éditable
   var allEditButtons = document.querySelectorAll(".edit-btn");
 
   allEditButtons.forEach(function (btn) {
@@ -70,13 +77,14 @@ window.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  //ajoute une confirmation avant la suppression d'un post
   var allDeleteForms = document.querySelectorAll(".delete-form");
 
   allDeleteForms.forEach(function (form) {
     form.addEventListener("submit", function (e) {
       var confirmIt = confirm("Are you sure you want to delete this post?");
       if (!confirmIt) {
-        e.preventDefault();
+        e.preventDefault();   //annule la suppression si l'utilisateur clique sur "Annuler"
       }
     });
   });
