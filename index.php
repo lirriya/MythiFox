@@ -76,33 +76,31 @@ if (session_status() == PHP_SESSION_NONE) {
             <div class="popup">Vous avez déjà aimé ce post !</div>
           </div>
 
+          <div class="post-actions">
+            <!-- Si l'utilisateur connecté est l'auteur du post on lui affiche les options d'édition -->
+            <?php if (isset($_SESSION['user']) && $_SESSION['user'] === $post['username']): ?>
+              <div class="post-actions">
+                <button id="toggleEditBtn" class="edit">Edit Post</button>
 
-        </div>
+                <div class="epf-group">
+                  <!-- Formulaire pour enregistrer les modifications -->
+                  <form id="epf-form" method="POST" action="./include/update_post.php" class="epf-hidden">
+                    <textarea name="content" rows="3"
+                      style="width: 100%;"><?php echo htmlspecialchars($post['content']); ?></textarea>
+                    <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+                    <button type="submit" class="edit-btn">Save</button>
+                  </form>
+                </div>
 
-        <div class="post-actions">
-          <!-- Si l'utilisateur connecté est l'auteur du post on lui affiche les options d'édition -->
-          <?php if (isset($_SESSION['user']) && $_SESSION['user'] === $post['username']): ?>
-            <div class="post-actions">
-              <button id="toggleEditBtn" class="edit">Edit Post</button>
-
-              <div class="epf-group">
-                <!-- Formulaire pour enregistrer les modifications -->
-                <form id="epf-form" method="POST" action="./include/update_post.php" class="epf-hidden">
-                  <textarea name="content" rows="3"
-                    style="width: 100%;"><?php echo htmlspecialchars($post['content']); ?></textarea>
+                <!-- Formulaire pour supprimer le post -->
+                <form method="POST" action="./include/delete_post.php"
+                  onsubmit="return confirm('Are you sure you want to delete this post?');" style="display:inline;">
                   <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
-                  <button type="submit" class="edit-btn">Save</button>
+                  <button type="submit" class="delete-btn">Delete</button>
                 </form>
               </div>
-
-              <!-- Formulaire pour supprimer le post -->
-              <form method="POST" action="./include/delete_post.php"
-                onsubmit="return confirm('Are you sure you want to delete this post?');" style="display:inline;">
-                <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
-                <button type="submit" class="delete-btn">Delete</button>
-              </form>
-            </div>
-          <?php endif; ?>
+            <?php endif; ?>
+          </div>
         </div>
       <?php endwhile; ?>
     </div>
