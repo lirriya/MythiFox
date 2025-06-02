@@ -100,3 +100,27 @@ Ces fichiers constituent les pages principales accessibles via le navigateur.
 5. Les publications peuvent être modifiées via `update_post.php` ou supprimées via `delete_post.php`.
 6. Le profil est modifiable via `edit_profile.php`.
 
+## MISE À JOUR 02/06/2025
+
+
+### Ajout du système de "like" dynamique avec animation
+
+#### Modifications apportées :
+
+* **`script.js`**  
+  Ajout d’un script JavaScript pour gérer les likes sur les posts avec :
+  * Animation lors du clic sur le bouton "like"
+  * Mise à jour du compteur de likes via AJAX
+  * Message contextuel si l'utilisateur a déjà liké le post
+
+* **`include/like_post.php`**  
+  Nouveau fichier côté serveur qui :
+  * Vérifie si l'utilisateur est connecté
+  * Empêche les likes multiples depuis une même session
+  * Incrémente les likes dans la base de données
+  * Retourne la réponse au format `x-www-form-urlencoded` avec le nombre de likes mis à jour
+
+* **Base de données (`posts` table)**  
+  Ajout de la colonne suivante :
+  ```sql
+  ALTER TABLE posts ADD COLUMN likes INT DEFAULT 0;
