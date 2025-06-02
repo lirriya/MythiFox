@@ -163,7 +163,39 @@ main {
 .delete-btn:hover {
   color: #303030;
   background-color: #a24b54;
-  
+}
+.like-form {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.like-btn {
+  background-color: transparent;
+  border: none;
+  color: #f6eef2;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+  box-shadow: 2px 2px 4px rgba(46, 17, 20, 0.4);
+}
+
+.like-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ff95b0;
+}
+
+.login-prompt {
+  font-size: 0.95rem;
+  color: #bfa3b3;
+  font-style: italic;
+}
+.like-btn.liked {
+  transform: scale(1.1);
+  background-color: rgba(255, 255, 255, 0.05);
+  transition: transform 0.2s ease;
 }
 
 /* ========== INDEX.PHP ========== */
@@ -414,6 +446,28 @@ input {
 #chk:checked ~ .signup label {
   transform: scale(0.6);
 }
+.popup {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #f8e8eb;
+  border: 1px solid #b997aa;
+  color: #7e3754;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  display: none;
+  box-shadow: 0 0 8px rgba(126, 55, 84, 0.3);
+  z-index: 100;
+  font-weight: 600;
+  user-select: none;
+}
+
+.popup.show {
+  display: block;
+  opacity: 1;
+}
 
 /*********** SHOWING POSTS IN INDEX.PHP ***********/
 .posts-list {
@@ -422,6 +476,7 @@ input {
 }
 
 .post {
+  position: relative;
   background-color: #5e3a4d;
   border-radius: 10px;
   box-shadow: 0 3px 6px #4a1a1d;
@@ -468,6 +523,12 @@ input {
   line-height: 1.5;
   white-space: pre-line;
   margin-bottom: 0.8rem;
+}
+.post-likes {
+  margin-left: auto;
+  color: #ccb6c5;
+  font-size: 0.85rem;
+  position: relative;
 }
 
 .post-images {
@@ -611,7 +672,6 @@ main.profile {
   padding: 0;
   margin: 0;
 }
-
 
 .posts {
   color: #3b1f2b;
