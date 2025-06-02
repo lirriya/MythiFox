@@ -115,31 +115,43 @@ window.addEventListener("DOMContentLoaded", function () {
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
       xhr.onreadystatechange = function () {
+        // Vérifie si la requête est terminée (étape 4)
         if (xhr.readyState === 4) {
+          // Vérifie si la réponse est OK (code 200)
           if (xhr.status === 200) {
-            // Format attendu : success=true&likes=42 OU success=false&message=already_liked
-            const responseText = xhr.responseText;
-            const params = {};
-            responseText.split("&").forEach(function (part) {
-              const pair = part.split("=");
-              params[decodeURIComponent(pair[0])] = decodeURIComponent(
-                pair[1] || ""
-              );
-            });
+            // Exemple de réponse : "success=true&likes=42"
+            var texteReponse = xhr.responseText;
 
-            if (params.success === "true") {
-              self.classList.add("liked");
-              if (countSpan) countSpan.textContent = params.likes;
+            // Crée un objet pour stocker les valeurs
+            var infos = {};
+
+            // Découpe la réponse en morceaux : ["success=true", "likes=42"]
+            var morceaux = texteReponse.split("&");
+
+            // Pour chaque morceau, on sépare la clé et la valeur
+            for (var i = 0; i < morceaux.length; i++) {
+              var paire = morceaux[i].split("=");
+              var cle = decodeURIComponent(paire[0]);
+              var valeur = decodeURIComponent(paire[1] || "");
+              infos[cle] = valeur;
+            }
+
+            // Maintenant, on peut utiliser les données
+            if (infos.success === "true") {
+              // Like réussi
+              button.classList.add("liked");
+              if (countSpan) countSpan.textContent = infos.likes;
               setTimeout(function () {
-                self.classList.remove("liked");
+                button.classList.remove("liked");
               }, 200);
-            } else if (params.message === "already_liked") {
-              showPopup(self.parentElement, "You already liked that post !");
+            } else if (infos.message === "already_liked") {
+              // L'utilisateur a déjà liké
+              showPopup(button.parentElement, "You already liked that post !");
             } else {
-              alert(params.message || "Erreur lors du like.");
+              alert(infos.message || "Erreur lors du like.");
             }
           } else {
-            alert("Erreur réseau");
+            alert("Erreur réseau (statut " + xhr.status + ")");
           }
         }
       };
