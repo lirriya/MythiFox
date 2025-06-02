@@ -73,7 +73,7 @@ if (session_status() == PHP_SESSION_NONE) {
               <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post image" class="post-images">
             <?php endif; ?>
             <!-- Pop up si post déjà aimé - unique à ce post -->
-            <div class="popup">Vous avez déjà aimé ce post !</div>
+            <div class="popup">You already liked that post !</div>
           </div>
 
           <div class="post-actions">
