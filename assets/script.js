@@ -89,7 +89,6 @@ window.addEventListener("DOMContentLoaded", function () {
   // ========== Like dynamique avec animation ==========
   const likeButtons = document.querySelectorAll(".like-btn");
 
-  // Fonction pour afficher un popup temporaire
   function showPopup(postElement, message) {
     const popup = postElement.querySelector(".popup");
     if (!popup) return;
@@ -98,45 +97,54 @@ window.addEventListener("DOMContentLoaded", function () {
     popup.classList.add("show");
 
     clearTimeout(popup.timeoutId);
-    popup.timeoutId = setTimeout(() => {
+    popup.timeoutId = setTimeout(function () {
       popup.classList.remove("show");
     }, 3000);
   }
 
-  likeButtons.forEach((button) => {
-    button.addEventListener("click", async function (e) {
+  likeButtons.forEach(function (button) {
+    button.addEventListener("click", function (e) {
       e.preventDefault();
+
       const postId = this.getAttribute("data-post-id");
       const countSpan = this.querySelector(".like-count");
+      const xhr = new XMLHttpRequest();
+      const self = this;
 
-      try {
-        const response = await fetch("include/like_post.php", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: `post_id=${encodeURIComponent(postId)}`,
-        });
+      xhr.open("POST", "include/like_post.php", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-        const result = await response.json();
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            // Format attendu : success=true&likes=42 OU success=false&message=already_liked
+            const responseText = xhr.responseText;
+            const params = {};
+            responseText.split("&").forEach(function (part) {
+              const pair = part.split("=");
+              params[decodeURIComponent(pair[0])] = decodeURIComponent(
+                pair[1] || ""
+              );
+            });
 
-        if (result.success) {
-          this.classList.add("liked");
-          if (countSpan) countSpan.textContent = result.likes;
-          setTimeout(() => this.classList.remove("liked"), 200);
-        } else {
-          // Affiche popup si l’utilisateur a déjà liké
-          if (result.message === "already_liked") {
-            const postElement = this.closest(".post");
-            showPopup(this.parentElement, "You already liked that post !");
+            if (params.success === "true") {
+              self.classList.add("liked");
+              if (countSpan) countSpan.textContent = params.likes;
+              setTimeout(function () {
+                self.classList.remove("liked");
+              }, 200);
+            } else if (params.message === "already_liked") {
+              showPopup(self.parentElement, "You already liked that post !");
+            } else {
+              alert(params.message || "Erreur lors du like.");
+            }
           } else {
-            alert(result.message || "Erreur lors du like.");
+            alert("Erreur réseau");
           }
         }
-      } catch (error) {
-        console.error("Like error:", error);
-        alert("Une erreur est survenue.");
-      }
+      };
+
+      xhr.send("post_id=" + encodeURIComponent(postId));
     });
   });
 });
