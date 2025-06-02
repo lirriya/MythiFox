@@ -128,7 +128,7 @@ window.addEventListener("DOMContentLoaded", function () {
           // Affiche popup si l’utilisateur a déjà liké
           if (result.message === "already_liked") {
             const postElement = this.closest(".post");
-            showPopup(this.parentElement, "Vous avez déjà aimé ce post !");
+            showPopup(this.parentElement, "You already liked that post !");
           } else {
             alert(result.message || "Erreur lors du like.");
           }
