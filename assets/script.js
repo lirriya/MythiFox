@@ -121,13 +121,10 @@ window.addEventListener("DOMContentLoaded", function () {
           if (xhr.status === 200) {
             // Exemple de réponse : "success=true&likes=42"
             var texteReponse = xhr.responseText;
-
             // Crée un objet pour stocker les valeurs
             var infos = {};
-
             // Découpe la réponse en morceaux : ["success=true", "likes=42"]
             var morceaux = texteReponse.split("&");
-
             // Pour chaque morceau, on sépare la clé et la valeur
             for (var i = 0; i < morceaux.length; i++) {
               var paire = morceaux[i].split("=");
@@ -135,7 +132,6 @@ window.addEventListener("DOMContentLoaded", function () {
               var valeur = decodeURIComponent(paire[1] || "");
               infos[cle] = valeur;
             }
-
             // Maintenant, on peut utiliser les données
             if (infos.success === "true") {
               // Like réussi
@@ -155,7 +151,6 @@ window.addEventListener("DOMContentLoaded", function () {
           }
         }
       };
-
       xhr.send("post_id=" + encodeURIComponent(postId));
     });
   });
