@@ -1,7 +1,5 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
-  session_start();
-}
+require_once __DIR__ . '/include/session_boot.php';
 ?>
 
 <?php
@@ -36,7 +34,7 @@ $posts = $res->fetch_all(MYSQLI_ASSOC);
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/styles.css?v=16">
+  <link rel="stylesheet" href="./assets/styles.css?v=17">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
 </head>
 <body>

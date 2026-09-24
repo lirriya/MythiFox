@@ -1,7 +1,7 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/session_boot.php';
+require_once __DIR__ . '/csrf.php';
+require_once __DIR__ . '/auth_guard.php';
 $flash = null;
 $modalMode = 'login';
 if (isset($_SESSION['flash'])) {
@@ -11,6 +11,7 @@ if (isset($_SESSION['flash'])) {
         $modalMode = 'signup';
     }
 }
+$needCaptcha = auth_guard_needs_captcha();
 ?>
 <div class="wrapper" data-mode="<?php echo $modalMode; ?>">
   <div class="modal-backdrop" data-close-modal></div>
@@ -25,8 +26,10 @@ if (isset($_SESSION['flash'])) {
         <p class="form-msg error"><?php echo htmlspecialchars($flash['message']); ?></p>
       <?php endif; ?>
       <form method="POST" action="./authentication/register.php">
+        <?php echo csrf_field(); ?>
         <input type="text" name="username" placeholder="Username" autocomplete="username" required>
         <input type="password" name="password" placeholder="Password" autocomplete="new-password" required>
+        <p class="form-hint">At least 8 characters, including a letter and a number.</p>
         <button class="btn btn-primary btn-block">Sign up</button>
       </form>
       <p class="modal-switch">Already have an account?
@@ -40,8 +43,13 @@ if (isset($_SESSION['flash'])) {
         <p class="form-msg error"><?php echo htmlspecialchars($flash['message']); ?></p>
       <?php endif; ?>
       <form method="POST" action="./authentication/login.php">
+        <?php echo csrf_field(); ?>
         <input type="text" name="username" placeholder="Username" autocomplete="username" required>
         <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
+        <?php if ($needCaptcha): ?>
+          <p class="form-hint">Security check: what is <?php echo htmlspecialchars(auth_guard_captcha_prompt()); ?>?</p>
+          <input type="text" name="captcha" placeholder="Your answer" autocomplete="off" required>
+        <?php endif; ?>
         <button class="btn btn-primary btn-block">Login</button>
       </form>
       <p class="modal-switch">Don't have an account?

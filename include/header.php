@@ -1,7 +1,6 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/session_boot.php';
+require_once __DIR__ . '/csrf.php';
 ?>
 <header class="header">
   <!-- Logo du site affiché en haut -->
@@ -31,6 +30,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <!-- Bouton pour se déconnecter -->
     <div class="btnLogin">
       <form action="./authentication/logout.php" method="POST">
+        <?php echo csrf_field(); ?>
         <button type="submit" class="btn btn-ghost">Logout</button>
       </form>
     </div>

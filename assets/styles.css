@@ -534,6 +534,17 @@ main {
   box-shadow: 0 0 0 2px rgba(168, 93, 138, 0.2);
 }
 
+.form-hint {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin: -6px 0 12px;
+  line-height: 1.4;
+}
+
+.modal-panel[data-panel="signup"] .form-hint {
+  color: #c8aabb;
+}
+
 .modal-switch {
   text-align: center;
   margin-top: 16px;

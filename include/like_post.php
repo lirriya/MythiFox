@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . '/session_boot.php';
 header('Content-Type: application/x-www-form-urlencoded');
 
 // Vérifie si l'utilisateur est connecté
