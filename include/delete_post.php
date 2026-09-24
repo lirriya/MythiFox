@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id'])) {
   require_once __DIR__ . '/db_config.php';
   $conn = db_connect();
 
-  $stmt = $conn->prepare("SELECT posts.id FROM posts JOIN users ON posts.user_id = users.id WHERE posts.id = ? AND users.username = ?");
+  $stmt = $conn->prepare("SELECT posts.id, posts.image FROM posts JOIN users ON posts.user_id = users.id WHERE posts.id = ? AND users.username = ?");
   $stmt->bind_param("is", $postId, $_SESSION['user']);
   $stmt->execute();
   $result = $stmt->get_result();
@@ -20,12 +20,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id'])) {
     die("You are not allowed to delete this post.");
   }
 
+  $post = $result->fetch_assoc();
+  $image_path = $post['image'];
+
   $stmt = $conn->prepare("DELETE FROM posts WHERE id = ?");
   $stmt->bind_param("i", $postId);
   $stmt->execute();
 
   $stmt->close();
   $conn->close();
+
+  if ($image_path && str_starts_with($image_path, 'uploads/')) {
+    $file = __DIR__ . '/../' . $image_path;
+    if (is_file($file)) {
+      unlink($file);
+    }
+  }
 
   header("Location: ../index.php");
   exit;
