@@ -33,7 +33,10 @@ $posts = $res->fetch_all(MYSQLI_ASSOC);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MythiFox</title>
-  <link rel="stylesheet" href="./assets/styles.css?v=5">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/styles.css?v=10">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -76,6 +79,6 @@ $posts = $res->fetch_all(MYSQLI_ASSOC);
   <?php endforeach; ?>
 </div>
 
-<script src="./assets/script.js?v=3"></script>
+<script src="./assets/script.js?v=4"></script>
 </body>
 </html>

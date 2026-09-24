@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </select>
                 </div>
                 <!-- Bouton pour publier le post -->
-                <button type="submit" class="btnPost">Post</button>
+                <button type="submit" class="btn btn-primary">Post</button>
             </div>
         </div>
     </form>
