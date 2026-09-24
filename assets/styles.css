@@ -390,74 +390,184 @@ main {
   display: block;
 }
 
-/****POP-UP SIGN-IN/REGISTRATION IN INDEX.PHP***/
+/****LOGIN / SIGN-UP MODAL (INDEX.PHP)****/
 .wrapper {
-  margin-top: 20px;
   position: fixed;
-  top: 15%;
-  left: 37%;
-  transform: translate(-50%, -50%);
-  width: 350px;
-  height: 500px;
-  background: #501b1d;
-  overflow: hidden;
-  max-width: 60%;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
-  cursor: pointer;
-  z-index: 1;
-  transform: scale(0);
-  transition: 0.5s ease-in-out;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .wrapper.active-popup {
-  transform: scale(1);
+  visibility: visible;
+  opacity: 1;
 }
 
-.close {
+.modal-backdrop {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 20px;
-  height: 20px;
-  padding: 3px;
-  background: var(--ink);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-bottom-left-radius: var(--radius-sm);
+  inset: 0;
+  background: rgba(22, 9, 12, 0.55);
 }
 
-.close .icon {
-  width: 14px;
-  height: 14px;
+.modal-card {
+  position: relative;
+  width: 380px;
+  max-width: 92%;
+  height: 470px;
+  background: #501b1d;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.modal-panel {
+  position: absolute;
+  inset: 0;
+  padding: 34px 28px 26px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.modal-panel[data-panel="signup"] {
+  background: #501b1d;
   color: #f6eef2;
 }
 
-#chk {
-  display: none;
+.modal-panel[data-panel="login"] {
+  background: #f4eaf0;
+  color: var(--ink);
+  border-radius: 60% / 5%;
+  transition: transform 0.65s cubic-bezier(0.35, 0, 0.25, 1);
 }
-.signup {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-.signupPH::placeholder {
-  color: #302223;
-}
-.wrapper label {
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 2.3em;
-  justify-content: center;
-  display: flex;
-  margin: 50px;
-  font-weight: bold;
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  padding-top: 20px;
-  transition: 0.5s ease-in-out;
+  padding: 4px;
+  border-radius: 6px;
+  color: #a97f97;
+}
+
+.modal-close:hover {
+  color: var(--ink);
+  background: rgba(168, 93, 138, 0.12);
+}
+
+.modal-close .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.wrapper[data-mode="login"] .modal-panel[data-panel="login"] {
+  transform: translateY(0);
+}
+
+.wrapper[data-mode="signup"] .modal-panel[data-panel="login"] {
+  transform: translateY(-105%);
+}
+
+.modal-panel[data-panel="signup"] .modal-title {
+  color: #f6eef2;
+}
+
+.modal-panel[data-panel="signup"] input {
+  background: #f2e0e6;
+  border: none;
+  color: #3b1f2b;
+}
+
+.modal-panel[data-panel="signup"] input::placeholder {
+  color: #8a6f7d;
+}
+
+.modal-panel[data-panel="signup"] .modal-switch {
+  color: #c8aabb;
+}
+
+.modal-panel[data-panel="signup"] .modal-switch-link {
+  color: #f6eef2;
+}
+
+.modal-panel[data-panel="signup"] .form-msg.error {
+  background: rgba(251, 227, 224, 0.9);
+}
+
+.modal-card input {
+  display: block;
+  width: 100%;
+  height: 44px;
+  margin: 0 0 14px;
+  padding: 0 14px;
+  background: #f7eef2;
+  border: 1px solid #d8b9c8;
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  justify-content: flex-start;
+}
+
+.modal-card input:focus {
+  outline: none;
+  border-color: var(--berry);
+  box-shadow: 0 0 0 2px rgba(168, 93, 138, 0.2);
+}
+
+.modal-switch {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.modal-switch-link {
+  background: none;
+  border: none;
+  color: var(--berry);
+  font-weight: 600;
+  font-family: var(--font-body);
+  font-size: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.modal-switch-link:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.form-msg {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  margin-bottom: 14px;
+}
+
+.form-msg.error {
+  background: #fbe3e0;
+  border: 1px solid #e5b3ad;
+  color: #a0342a;
 }
 input {
   width: 60%;
@@ -472,26 +582,27 @@ input {
   border-radius: 5px;
 }
 
-.login {
-  height: 460px;
-  background: #eee;
-  border-radius: 60% / 5%;
-  transform: translateY(-180px);
-  transition: 0.8s ease-in-out;
-}
-.login label {
-  color: #64485c;
-  transform: scale(0.6);
+/* ========== TOAST (like errors) ========== */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #501b1d;
+  color: #f6eef2;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 300;
 }
 
-#chk:checked ~ .login {
-  transform: translateY(-500px);
-}
-#chk:checked ~ .login label {
-  transform: scale(1);
-}
-#chk:checked ~ .signup label {
-  transform: scale(0.6);
+.toast.show {
+  opacity: 1;
+  visibility: visible;
 }
 .popup {
   position: absolute;

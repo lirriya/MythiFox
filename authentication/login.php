@@ -18,17 +18,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if ($stmt->fetch()) {
     //vérifie si le mot de passe saisi correspond au mot de passe haché en base (vérification sécurisée)
     if (password_verify($password_input, $password_hashed)) {
-      //si le mot de passe est correct, stocke l’utilisateur en session et redirige vers la page d’accueil
+      //si le mot de passe est correct, stocke l'utilisateur en session et redirige vers la page d'accueil
       $_SESSION['user'] = $username;
-      //si le mot de passe est incorrect, redirige vers l’accueil avec une erreur spécifique
       header("Location: ../index.php");
       exit();
     } else {
-      header("Location: ../index.php?error=password");    //si l’utilisateur n’est pas trouvé, redirige vers l’accueil avec une erreur spécifique
+      $_SESSION['flash'] = ['type' => 'error', 'origin' => 'login', 'message' => 'Incorrect password. Try again.'];
+      header("Location: ../index.php");
       exit();
     }
   } else {
-    header("Location: ../index.php?error=username");
+    $_SESSION['flash'] = ['type' => 'error', 'origin' => 'login', 'message' => 'Username not found. Please check your spelling or sign up first.'];
+    header("Location: ../index.php");
     exit();
   }
 
