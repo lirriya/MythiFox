@@ -27,12 +27,8 @@ if (in_array($post_id, $_SESSION['liked_posts'])) {
     exit;
 }
 
-// Connexion à la base
-$conn = new mysqli("localhost", "root", "", "MythiFox");
-if ($conn->connect_error) {
-    echo "success=false&message=Échec de la connexion à la base de données.";
-    exit;
-}
+require_once __DIR__ . '/db_config.php';
+$conn = db_connect();
 
 // Incrémente les likes
 $sql = "UPDATE posts SET likes = likes + 1 WHERE id = ?";
