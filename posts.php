@@ -36,7 +36,7 @@ $posts = $res->fetch_all(MYSQLI_ASSOC);
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/styles.css?v=10">
+  <link rel="stylesheet" href="./assets/styles.css?v=14">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -44,16 +44,18 @@ $posts = $res->fetch_all(MYSQLI_ASSOC);
 <?php include 'include/header.php'; ?>
 <?php include 'include/sidebar.php'; ?>
 
-<div class="posts">
-  <h2>Category: <?php echo htmlspecialchars($category); ?></h2>
-  <?php
-  if (count($posts) == 0) {
-    echo "<p>No posts found in this category.</p>";
-  }
-  ?>
-</div>
+<div class="layout">
+  <div class="feed">
+    <div class="posts">
+      <h2>Category: <?php echo htmlspecialchars($category); ?></h2>
+      <?php
+      if (count($posts) == 0) {
+        echo "<p>No posts found in this category.</p>";
+      }
+      ?>
+    </div>
 
-<div class="posts-list">
+    <div class="posts-list">
   <?php foreach ($posts as $post): ?>
     <div class="post">
       <div class="post-header">
@@ -77,8 +79,42 @@ $posts = $res->fetch_all(MYSQLI_ASSOC);
       ?>
     </div>
   <?php endforeach; ?>
+    </div>
+  </div>
+
+  <aside class="right-rail">
+    <div class="rail-card about-card">
+      <img src="assets/logo.png" alt="MythiFox mascot" class="about-logo">
+      <h2 class="about-title">MythiFox</h2>
+      <p class="about-text">A cozy little corner of the internet. Music, art, quotes, and thoughts — shared softly.</p>
+    </div>
+    <div class="rail-card top-posts-card">
+      <h3 class="rail-card-title">Top Liked</h3>
+      <ul class="top-posts">
+        <?php
+        $topSql = "SELECT posts.id, posts.content, posts.likes, users.username FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.likes DESC LIMIT 5";
+        $topResult = $conn->query($topSql);
+        ?>
+        <?php if ($topResult && $topResult->num_rows > 0): ?>
+          <?php while ($top = $topResult->fetch_assoc()): ?>
+            <li>
+              <a href="profile.php?user=<?php echo urlencode($top['username']); ?>" class="top-post-link">
+                <?php echo htmlspecialchars(mb_substr($top['content'], 0, 60)); ?><?php echo mb_strlen($top['content']) > 60 ? '…' : ''; ?>
+              </a>
+              <span class="top-post-likes">
+                <svg class="icon icon-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                <span><?php echo $top['likes']; ?></span>
+              </span>
+            </li>
+          <?php endwhile; ?>
+        <?php else: ?>
+          <li class="top-posts-empty">No likes yet — be the first!</li>
+        <?php endif; ?>
+      </ul>
+    </div>
+  </aside>
 </div>
 
-<script src="./assets/script.js?v=4"></script>
+<script src="./assets/script.js?v=5"></script>
 </body>
 </html>

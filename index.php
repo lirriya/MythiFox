@@ -13,7 +13,7 @@ if (session_status() == PHP_SESSION_NONE) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/styles.css?v=10">
+  <link rel="stylesheet" href="./assets/styles.css?v=14">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -24,9 +24,11 @@ if (session_status() == PHP_SESSION_NONE) {
   <?php include 'include/header.php'; ?>
   <?php include 'include/sidebar.php'; ?>
 
-  <?php if (isset($_SESSION['user'])): ?>
-    <?php include 'include/makePost.php'; ?>
-  <?php endif; ?>
+  <div class="layout">
+    <div class="feed">
+      <?php if (isset($_SESSION['user'])): ?>
+        <?php include 'include/makePost.php'; ?>
+      <?php endif; ?>
 
   <?php
   require_once __DIR__ . '/include/db_config.php';
@@ -110,9 +112,43 @@ if (session_status() == PHP_SESSION_NONE) {
       <?php endwhile; ?>
     </div>
   <?php else: ?>
-    <!-- Message si aucun post trouvé -->
-    <p>No posts yet. Be the first to post!</p>
-  <?php endif; ?>
+        <!-- Message si aucun post trouvé -->
+        <p class="no-posts">No posts yet. Be the first to post!</p>
+      <?php endif; ?>
+    </div>
+
+    <aside class="right-rail">
+      <div class="rail-card about-card">
+        <img src="assets/logo.png" alt="MythiFox mascot" class="about-logo">
+        <h2 class="about-title">MythiFox</h2>
+        <p class="about-text">A cozy little corner of the internet. Music, art, quotes, and thoughts — shared softly.</p>
+      </div>
+      <div class="rail-card top-posts-card">
+        <h3 class="rail-card-title">Top Liked</h3>
+        <ul class="top-posts">
+          <?php
+          $topSql = "SELECT posts.id, posts.content, posts.likes, users.username FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.likes DESC LIMIT 5";
+          $topResult = $conn->query($topSql);
+          ?>
+          <?php if ($topResult && $topResult->num_rows > 0): ?>
+            <?php while ($top = $topResult->fetch_assoc()): ?>
+              <li>
+                <a href="profile.php?user=<?php echo urlencode($top['username']); ?>" class="top-post-link">
+                  <?php echo htmlspecialchars(mb_substr($top['content'], 0, 60)); ?><?php echo mb_strlen($top['content']) > 60 ? '…' : ''; ?>
+                </a>
+                <span class="top-post-likes">
+                  <svg class="icon icon-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                  <span><?php echo $top['likes']; ?></span>
+                </span>
+              </li>
+            <?php endwhile; ?>
+          <?php else: ?>
+            <li class="top-posts-empty">No likes yet — be the first!</li>
+          <?php endif; ?>
+        </ul>
+      </div>
+    </aside>
+  </div>
 
   <?php $conn->close(); ?>
 
@@ -150,7 +186,7 @@ if (session_status() == PHP_SESSION_NONE) {
     </script>
   <?php endif; ?>
 
-  <script src="./assets/script.js?v=4"></script>
+  <script src="./assets/script.js?v=5"></script>
 </body>
 
 </html>
