@@ -6,7 +6,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 <?php
 $category = isset($_GET['category']) ? $_GET['category'] : null;    //on récupère la catégorie depuis l'URL (null si non fournie)
-$valid_categories = ['Music', 'Art', 'Quotes', 'Games', 'Anime', 'Coding'];   //liste des catégories valides
+$valid_categories = ['music', 'art', 'quotes', 'games', 'anime', 'coding'];   //liste des catégories valides
 
 //on redirige vers la page des posts si il n y'q pas de catégorie ou catégorie invalide 
 if (!$category || !in_array($category, $valid_categories)) {

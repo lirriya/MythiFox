@@ -40,12 +40,12 @@ if (session_status() === PHP_SESSION_NONE) {
       </li>
       <!-- Sous-menu : liste des catégories -->
       <ul class="dropdown"> 
-        <li><a href="posts.php?category=Music" class="nav-link">Music</a></li>
-        <li><a href="posts.php?category=Art" class="nav-link">Art</a></li>
-        <li><a href="posts.php?category=Quotes" class="nav-link">Quotes</a></li>
-        <li><a href="posts.php?category=Games" class="nav-link">Games</a></li>
-        <li><a href="posts.php?category=Anime" class="nav-link">Anime</a></li>
-        <li><a href="posts.php?category=Coding" class="nav-link">Coding</a></li>
+        <li><a href="posts.php?category=music" class="nav-link">Music</a></li>
+        <li><a href="posts.php?category=art" class="nav-link">Art</a></li>
+        <li><a href="posts.php?category=quotes" class="nav-link">Quotes</a></li>
+        <li><a href="posts.php?category=games" class="nav-link">Games</a></li>
+        <li><a href="posts.php?category=anime" class="nav-link">Anime</a></li>
+        <li><a href="posts.php?category=coding" class="nav-link">Coding</a></li>
       </ul>
     </div>
   </ul>
