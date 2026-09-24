@@ -43,16 +43,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         //si une image a été téléchargée
         if (!empty($_FILES['image']['name'])) {
-$upload_dir = __DIR__ . '/../uploads/' . date('Y/m') . '/';       //dossier des uploads
-            if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);       //crée le dossier s'il n'existe pas
+            $upload_dir = __DIR__ . '/../uploads/' . date('Y/m') . '/';
+            if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
 
-
-            $filename = time() . '_' . basename($_FILES['image']['name']);      //crée un nom unique pour le fichier
+            $filename = time() . '_' . basename($_FILES['image']['name']);
             $target_path = $upload_dir . $filename;
 
-            //déplace le fichier téléchargé dans le dossier cible
             if (move_uploaded_file($_FILES['image']['tmp_name'], $target_path)) {
-                $image_path = $target_path;
+                $image_path = 'uploads/' . date('Y/m') . '/' . $filename;
             } else {
                 echo '<p class="error">Image upload failed.</p>';
             }
