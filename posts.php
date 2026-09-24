@@ -14,10 +14,8 @@ if (!$category || !in_array($category, $valid_categories)) {
   exit();
 }
 
-$conn = new mysqli("localhost", "root", "", "MythiFox");
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);    //vérification si la connexion échoue
-}
+require_once __DIR__ . '/include/db_config.php';
+$conn = db_connect();
 
 //préparation de la requête SQL pour récupérer les posts de la catégorie choisie
 $query = "SELECT posts.*, users.username, users.profile_pic FROM posts JOIN users ON posts.user_id = users.id WHERE posts.category = ? ORDER BY posts.created_at DESC";

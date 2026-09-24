@@ -9,10 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['post_id']) && isset($_
     die('You must be logged in.');
   }
 
-  $conn = new mysqli("localhost", "root", "", "MythiFox");
-  if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-  }
+  require_once __DIR__ . '/db_config.php';
+  $conn = db_connect();
 
   $check = $conn->prepare("SELECT posts.id FROM posts JOIN users ON posts.user_id = users.id WHERE posts.id = ? AND users.username = ?");
   $check->bind_param("is", $postId, $_SESSION['user']);

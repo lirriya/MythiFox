@@ -8,10 +8,8 @@ if (!isset($_SESSION['user'])) {
     return; 
 }
 
-$conn = new mysqli("localhost", "root", "", "MythiFox");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once __DIR__ . '/db_config.php';
+$conn = db_connect();
 
 $username = $_SESSION['user'];
 $stmt = $conn->prepare("SELECT id, profile_pic FROM users WHERE username = ?");
