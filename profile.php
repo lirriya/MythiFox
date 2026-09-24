@@ -51,7 +51,7 @@ $conn->close();
 <head>
   <meta charset="UTF-8">
   <title><?= htmlspecialchars($user['username']) ?> | Profile</title>
-  <link rel="stylesheet" href="./assets/styles.css">
+  <link rel="stylesheet" href="./assets/styles.css?v=5">
 </head>
 <body>
 
@@ -155,6 +155,6 @@ $conn->close();
   </section>
 </main>
 
-<script src="./assets/script.js"></script>
+<script src="./assets/script.js?v=3"></script>
 </body>
 </html>

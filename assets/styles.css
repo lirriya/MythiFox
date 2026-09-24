@@ -5,6 +5,18 @@
   box-sizing: border-box;
 }
 
+.icon {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
 body {
   background-color: #d8cbd1;
 }
@@ -187,15 +199,28 @@ main {
   color: #ff95b0;
 }
 
+.like-btn .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.like-btn.liked .icon {
+  fill: currentColor;
+  transition: fill 0.2s ease;
+}
+
 .login-prompt {
   font-size: 0.95rem;
   color: #bfa3b3;
   font-style: italic;
 }
+
+.login-prompt .icon {
+  width: 16px;
+  height: 16px;
+}
 .like-btn.liked {
-  transform: scale(1.1);
-  background-color: rgba(255, 255, 255, 0.05);
-  transition: transform 0.2s ease;
+  color: #ff95b0;
 }
 
 /* ========== INDEX.PHP ========== */
@@ -221,51 +246,73 @@ main {
   margin-right: 15px;
 }
 
-.header .user-icon img {
-  width: 30px;
-  height: 30px;
-  margin-top: 20px;
+.user-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #c5a3b6;
+  transition: color 0.3s;
+}
+
+.user-link:hover {
+  color: #f6eef2;
+}
+
+.user-link .icon {
+  width: 20px;
+  height: 20px;
 }
 
 .name {
-  opacity: 0;
-  margin-top: 0px;
-  font-size: 16px;
-  color: #c5a3b6;
-  transition: opacity 0.3s;
-}
-
-.user-icon:hover .name {
-  opacity: 1;
+  font-size: 15px;
+  font-weight: 600;
+  color: inherit;
 }
 
 .search-form {
   width: 10%;
   flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.search-field {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+}
+
+.search-form .icon-search {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #c5a3b6;
+  pointer-events: none;
 }
 
 .search-form input[type="text"] {
-  width: 80%;
-  padding-top: 30px;
-  padding-left: 15px;
+  width: 100%;
+  padding: 10px 14px 10px 36px;
   border: none;
-  font-size: 16px;
+  border-radius: 20px;
+  background: rgba(46, 17, 20, 0.25);
+  font-size: 15px;
+  color: #f6eef2;
   outline: none;
-  background: none;
-  transition: 0.5s;
-}
-
-.search-form input[type="text"]:hover {
-  font-size: 17px;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .searchBar::placeholder {
-  color: #684044;
-  align-items: center;
+  color: #b997aa;
 }
 
 .search-form input[type="text"]:focus {
-  color: #2e1114;
+  background: rgba(46, 17, 20, 0.35);
+  box-shadow: 0 0 0 2px rgba(197, 163, 182, 0.35);
 }
 
 /*********** SIDEBAR.PHP ***********/
@@ -280,14 +327,22 @@ main {
   border-right: solid 2px #2e1114;
 }
 
-.navigation img {
+.navigation .icon {
   width: 25px;
+  height: 25px;
+  color: #b997aa;
 }
 
-.navigation #down {
-  margin-left: 15px;
-  margin-top: 13px;
-  width: 10px;
+.navigation .icon-chevron {
+  display: inline-block;
+  margin-left: 10px;
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease;
+}
+
+.navigation .big-link.open .icon-chevron {
+  transform: rotate(180deg);
 }
 
 .navigation .big-link a {
@@ -390,6 +445,12 @@ main {
   border-bottom-left-radius: 5px;
 }
 
+.close .icon {
+  width: 14px;
+  height: 14px;
+  color: #f6eef2;
+}
+
 #chk {
   display: none;
 }
@@ -401,7 +462,7 @@ main {
 .signupPH::placeholder {
   color: #302223;
 }
-label {
+.wrapper label {
   color: #fff;
   font-size: 2.3em;
   justify-content: center;
@@ -663,7 +724,7 @@ main.profile {
   gap: 12px;
 }
 
-.create-post-links img {
+.create-post-links .icon {
   width: 28px;
   height: 28px;
 }

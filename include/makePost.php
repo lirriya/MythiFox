@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <!-- Champ caché pour upload d'image + icône cliquable -->
                 <input type="file" name="image" id="image-upload" accept="image/*" style="display: none;" />
                 <label for="image-upload" class="camera-label">
-                    <img src="assets/camera.png" alt="add photo" />
+                    <svg class="icon icon-camera" viewBox="0 0 24 24" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2Z"/><circle cx="12" cy="13" r="4"/></svg>
                 </label>
                 <!-- Sélecteur de catégorie -->
                 <div class="category">

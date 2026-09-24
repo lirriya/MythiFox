@@ -34,6 +34,8 @@ window.addEventListener("DOMContentLoaded", function () {
   if (arrowBtn && dropdown) {
     arrowBtn.addEventListener("click", function () {
       dropdown.classList.toggle("show");
+      const linkGroup = arrowBtn.closest(".big-link");
+      if (linkGroup) linkGroup.classList.toggle("open");
     });
   }
 
@@ -137,9 +139,6 @@ window.addEventListener("DOMContentLoaded", function () {
               // Like réussi
               button.classList.add("liked");
               if (countSpan) countSpan.textContent = infos.likes;
-              setTimeout(function () {
-                button.classList.remove("liked");
-              }, 200);
             } else if (infos.message === "already_liked") {
               // L'utilisateur a déjà liké
               showPopup(button.parentElement, "You already liked that post !");

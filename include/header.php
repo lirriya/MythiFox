@@ -8,19 +8,19 @@ if (session_status() === PHP_SESSION_NONE) {
   <img class="logo" src="assets/logo.png" alt="logo of the site" /> 
   <!-- Barre de recherche (formulaire) -->
   <div class="search-form" action="#" method="get">
-    <!-- Champ texte pour entrer la recherche -->
-    <input type="text" class="searchBar" placeholder="Search MythiFox..." name="q">
-    <!-- Icône de recherche -->
-    <i class="fas fa-search"></i>
+    <div class="search-field">
+      <svg class="icon icon-search" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" class="searchBar" placeholder="Search MythiFox..." name="q">
+    </div>
   </div>
 
   <?php if (isset($_SESSION['user'])): ?>
           <!-- Si utilisateur connecté, afficher icône utilisateur et nom -->
           <span class="user-icon">
-            <!-- Lien vers le profil utilisateur -->
-            <a href="profile.php"><img src="assets/user.png" alt="user profile" /> </a>
-            <!-- Affiche le nom d'utilisateur échappé pour la sécurité -->
-            <p class="name"><?php echo htmlspecialchars($_SESSION['user']); ?></p>
+            <a href="profile.php" class="user-link">
+              <svg class="icon icon-user" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span class="name"><?php echo htmlspecialchars($_SESSION['user']); ?></span>
+            </a>
           </span>
     
     <!-- Bouton pour se déconnecter -->

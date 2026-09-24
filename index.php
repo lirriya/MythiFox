@@ -10,7 +10,7 @@ if (session_status() == PHP_SESSION_NONE) {
 <head>
   <meta charset="UTF-8">
   <title>MythiFox</title>
-  <link rel="stylesheet" href="./assets/styles.css">
+  <link rel="stylesheet" href="./assets/styles.css?v=5">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -60,11 +60,15 @@ if (session_status() == PHP_SESSION_NONE) {
 
           <div class="post-likes">
             <?php if (isset($_SESSION['user'])): ?>
-              <button class="like-btn" data-post-id="<?php echo $post['id']; ?>">
-                ❤ <span class="like-count"><?php echo $post['likes']; ?></span>
+              <?php $liked_post = isset($_SESSION['user']) && in_array($post['id'], $_SESSION['liked_posts'] ?? []); ?>
+              <button class="like-btn<?php echo $liked_post ? ' liked' : ''; ?>" data-post-id="<?php echo $post['id']; ?>">
+                <svg class="icon icon-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                <span class="like-count"><?php echo $post['likes']; ?></span>
               </button>
             <?php else: ?>
-              <span class="login-prompt">❤️ <?php echo $post['likes']; ?> (login to like)</span>
+              <span class="login-prompt"><svg class="icon icon-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                <?php echo $post['likes']; ?> (login to like)
+              </span>
             <?php endif; ?>
 
             <?php if (!empty($post['image'])): ?>
@@ -112,7 +116,7 @@ if (session_status() == PHP_SESSION_NONE) {
   <!-- Fenêtre d'inscription et de connexion -->
   <div class="wrapper">
     <span class="close">
-      <img class="close" src="assets/close.png" alt="close">
+      <svg class="icon icon-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
     </span>
     <input type="checkbox" id="chk" aria-hidden="true">
 
@@ -143,7 +147,7 @@ if (session_status() == PHP_SESSION_NONE) {
     </script>
   <?php endif; ?>
 
-  <script src="./assets/script.js"></script>
+  <script src="./assets/script.js?v=3"></script>
 </body>
 
 </html>
