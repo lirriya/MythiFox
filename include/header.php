@@ -5,7 +5,12 @@ if (session_status() === PHP_SESSION_NONE) {
 ?>
 <header class="header">
   <!-- Logo du site affiché en haut -->
-  <img class="logo" src="assets/logo.png" alt="logo of the site" /> 
+  <button id="nav-toggle" class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+    <svg class="icon icon-menu" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <a href="index.php" class="logo-link">
+    <img class="logo" src="assets/logo.png" alt="MythiFox home" />
+  </a> 
   <!-- Barre de recherche (formulaire) -->
   <div class="search-form" action="#" method="get">
     <div class="search-field">

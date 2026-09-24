@@ -39,7 +39,25 @@ window.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ========== Formulaire d’édition de profil ==========
+  // ========== Navigation mobile (hamburger) ==========
+  const navToggle = document.getElementById("nav-toggle");
+  const nav = document.querySelector(".navigation");
+
+  if (navToggle && nav) {
+    navToggle.addEventListener("click", function () {
+      const isOpen = nav.classList.toggle("open");
+      navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    });
+
+    nav.querySelectorAll(".nav-link").forEach(function (link) {
+      link.addEventListener("click", function () {
+        nav.classList.remove("open");
+        navToggle.setAttribute("aria-expanded", "false");
+      });
+    });
+  }
+
+  // ========== Formulaire d'édition de profil ==========
   const editToggle = document.getElementById("toggleEditBtn");
   const editForm = document.getElementById("epf-form");
 

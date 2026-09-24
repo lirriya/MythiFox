@@ -312,14 +312,15 @@ main {
   top: 0;
   left: 0;
   height: 100%;
-  width: 160px;
+  width: 200px;
   background: var(--sidebar);
   border-right: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.3s ease;
 }
 
 .navigation .icon {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   color: var(--mauve);
   transition: transform 0.25s ease;
 }
@@ -327,8 +328,8 @@ main {
 .navigation .icon-chevron {
   display: inline-block;
   margin-left: auto;
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   transition: transform 0.3s ease;
 }
 
@@ -338,7 +339,7 @@ main {
 
 .navigation .big-link a,
 .navigation .tree {
-  padding: 8px 2px;
+  padding: 10px 4px;
   text-decoration: none;
   color: var(--mauve);
   transition: color 0.25s ease;
@@ -360,9 +361,9 @@ main {
 .navigation .big-link > li {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 13px 16px;
-  font-size: 16px;
+  gap: 14px;
+  padding: 16px 20px;
+  font-size: 18px;
 }
 
 /** dropdown for category **/
@@ -373,7 +374,7 @@ main {
 }
 
 .navigation .dropdown a {
-  font-size: 15px;
+  font-size: 16.5px;
   color: #c8aabb;
 }
 
@@ -382,7 +383,7 @@ main {
 }
 
 .navigation .dropdown li {
-  padding: 4px 3px 12px 50px;
+  padding: 5px 4px 14px 64px;
   position: relative;
 }
 .navigation .dropdown.show {
@@ -517,8 +518,9 @@ input {
 
 /*********** SHOWING POSTS IN INDEX.PHP ***********/
 .posts-list {
-  background-color: var(--cream-bg);
-  margin: 8% auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
 .post {
@@ -528,9 +530,7 @@ input {
   box-shadow: var(--shadow-md);
   transition: background 0.3s, transform 0.2s ease;
   width: 100%;
-  max-width: 950px;
-  margin: 3% auto 0;
-  padding: 1.2rem;
+  padding: 1.4rem;
   box-sizing: border-box;
 }
 
@@ -550,39 +550,41 @@ input {
   font-family: var(--font-display);
   font-weight: 700;
   text-shadow: 0 0 2px var(--maroon);
-  font-size: 2rem;
+  font-size: 2.35rem;
 }
 
 .post-date {
   margin-left: auto;
   color: #ccb6c5;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
 }
 
 .post-category {
   color: #d1aac3;
+  font-size: 1rem;
   font-style: italic;
   margin-bottom: 0.8rem;
 }
 
 .post-content {
   color: #f0d8e2;
-  line-height: 1.5;
+  font-size: 1.12rem;
+  line-height: 1.6;
   white-space: pre-line;
   margin-bottom: 0.8rem;
 }
 .post-likes {
   margin-left: auto;
   color: #ccb6c5;
-  font-size: 0.85rem;
+  font-size: 0.98rem;
   position: relative;
 }
 
 .post-images {
   max-height: 700px;
-  max-width: 700px;
+  max-width: 100%;
   border-radius: 8px;
-  border: 1px solid #4a1a1d;
+  border: 1px solid var(--maroon);
   display: block;
   margin: 0 auto;
   object-fit: cover;
@@ -660,9 +662,7 @@ main.profile {
 /*********** POST.PHP ***********/
 
 .create-post {
-  margin: 8% auto 0;
   width: 100%;
-  max-width: 950px;
   background-color: var(--cream);
   border-radius: var(--radius-md);
   font-family: var(--font-body);
@@ -727,8 +727,7 @@ main.profile {
 }
 
 .posts {
-  color: #3b1f2b;
-  margin: 7% 14% 0;
+  color: var(--ink-soft);
 }
 
 .post-actions {
@@ -774,4 +773,196 @@ main.profile {
   margin: 0;
   height: 3em;
   font-size: 0.8em;
+}
+
+/* ========== LAYOUT (dashboard) ========== */
+.layout {
+  margin: 80px 0 0 200px;
+  padding: 32px 40px 48px;
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.feed {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.no-posts {
+  text-align: center;
+  color: #7a5f71;
+  font-style: italic;
+  padding: 40px 0;
+}
+
+.right-rail {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: sticky;
+  top: 112px;
+}
+
+.rail-card {
+  background: var(--cream);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  color: var(--ink-soft);
+}
+
+.about-card {
+  text-align: center;
+}
+
+.about-logo {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.about-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.about-text {
+  font-size: 0.9rem;
+  color: #7a5f71;
+  line-height: 1.5;
+}
+
+.rail-card-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.top-posts {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.top-posts li {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.top-post-link {
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  transition: color 0.25s ease;
+}
+
+.top-post-link:hover {
+  color: var(--berry);
+}
+
+.top-post-likes {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--berry);
+  font-weight: 600;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.top-post-likes .icon {
+  width: 14px;
+  height: 14px;
+}
+
+.top-posts-empty {
+  font-size: 0.85rem;
+  color: #7a5f71;
+  font-style: italic;
+}
+
+.posts h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+/* ========== HEADER (polish) ========== */
+.nav-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--mauve-light);
+  cursor: pointer;
+  padding: 8px;
+  margin-left: 12px;
+  border-radius: var(--radius-sm);
+  transition: color 0.25s ease;
+}
+
+.nav-toggle:hover {
+  color: var(--cream-text);
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1040px) {
+  .right-rail {
+    display: none;
+  }
+}
+
+@media (max-width: 840px) {
+  .navigation {
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-lg);
+    z-index: 98;
+  }
+
+  .navigation.open {
+    transform: translateX(0);
+  }
+
+  .nav-toggle {
+    display: block;
+  }
+
+  .layout {
+    margin-left: 0;
+    padding: 24px 16px 40px;
+  }
+
+  .feed {
+    width: 100%;
+  }
+
+  .search-form {
+    display: none;
+  }
 }
