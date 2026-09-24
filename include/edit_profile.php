@@ -2,6 +2,7 @@
 session_start();
 
 require_once __DIR__ . '/db_config.php';
+require_once __DIR__ . '/upload_helper.php';
 $conn = db_connect();
 
 if (!isset($_SESSION['user'])) {
@@ -17,27 +18,24 @@ $upload_dir = __DIR__ . '/../uploads/profile_pics/';
 $new_profile_pic_path = null;
 
 if (isset($_FILES['new_profile_pic']) && $_FILES['new_profile_pic']['error'] == 0) {
-  $tmp_name = $_FILES['new_profile_pic']['tmp_name'];
-  $original_name = $_FILES['new_profile_pic']['name'];
-  $file_ext = strtolower(pathinfo($original_name, PATHINFO_EXTENSION));
-  $allowed_exts = ["jpg", "jpeg", "png", "gif"];
+  [$valid, $error] = validate_uploaded_image($_FILES['new_profile_pic']);
+  if (!$valid) {
+    echo $error;
+    exit();
+  }
 
-  if (in_array($file_ext, $allowed_exts)) {
-    if (!is_dir($upload_dir)) {
-      mkdir($upload_dir, 0755, true);
-    }
-    
-    $new_file_name = uniqid('profile_') . '.' . $file_ext;
-    $destination = $upload_dir . $new_file_name;
+  if (!is_dir($upload_dir)) {
+    mkdir($upload_dir, 0755, true);
+  }
 
-    if (move_uploaded_file($tmp_name, $destination)) {
-      $new_profile_pic_path = 'uploads/profile_pics/' . $new_file_name;
-    } else {
-      echo "Failed to upload file.";
-      exit();
-    }
+  $file_ext = strtolower(pathinfo($_FILES['new_profile_pic']['name'], PATHINFO_EXTENSION));
+  $new_file_name = uniqid('profile_') . '.' . $file_ext;
+  $destination = $upload_dir . $new_file_name;
+
+  if (move_uploaded_file($_FILES['new_profile_pic']['tmp_name'], $destination)) {
+    $new_profile_pic_path = 'uploads/profile_pics/' . $new_file_name;
   } else {
-    echo "Invalid file type.";
+    echo "Failed to upload file.";
     exit();
   }
 }
