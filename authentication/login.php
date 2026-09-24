@@ -1,10 +1,7 @@
 <?php
 session_start();
-$conn = new mysqli("localhost", "root", "", "MythiFox");
-
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
+require_once __DIR__ . '/../include/db_config.php';
+$conn = db_connect();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   //récupère le nom d’utilisateur et le mot de passe saisis par l’utilisateur
