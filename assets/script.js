@@ -12,7 +12,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
   // ========== Éléments de la popup ==========
   const wrapper = document.querySelector(".wrapper");
-  const loginBtn = document.querySelector(".btnLogin-popup");
+  const loginBtn = document.getElementById("login-popup-btn");
   const closeBtn = document.querySelector(".close");
 
   if (loginBtn) {

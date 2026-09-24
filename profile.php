@@ -51,7 +51,10 @@ $conn->close();
 <head>
   <meta charset="UTF-8">
   <title><?= htmlspecialchars($user['username']) ?> | Profile</title>
-  <link rel="stylesheet" href="./assets/styles.css?v=5">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/styles.css?v=10">
 </head>
 <body>
 
@@ -79,7 +82,7 @@ $conn->close();
       </p>
 
       <?php if ($isMe): ?>
-      <button id="toggleEditBtn" class="edit">Edit Profile</button>
+      <button id="toggleEditBtn" class="btn btn-ghost btn-sm">Edit Profile</button>
 
       <form id="epf-form" action="./include/edit_profile.php" method="POST" enctype="multipart/form-data" class="epf-hidden">
         <div class="epf-group">
@@ -100,7 +103,7 @@ $conn->close();
           <input type="file" id="epf-pic" name="new_profile_pic" class="epf-input-file" accept="image/*">
         </div>
 
-        <button type="submit" class="edit">Save Changes</button>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
       </form>
       <?php endif; ?>
     </div>
@@ -155,6 +158,6 @@ $conn->close();
   </section>
 </main>
 
-<script src="./assets/script.js?v=3"></script>
+<script src="./assets/script.js?v=4"></script>
 </body>
 </html>

@@ -26,13 +26,13 @@ if (session_status() === PHP_SESSION_NONE) {
     <!-- Bouton pour se déconnecter -->
     <div class="btnLogin">
       <form action="./authentication/logout.php" method="POST">
-        <button type="submit" class="logout">Logout</button>
+        <button type="submit" class="btn btn-ghost">Logout</button>
       </form>
     </div>
   <?php else: ?>
     <!-- Afficher bouton de connexion si pas connecté -->
     <div class="btnLogin">
-      <button class="btnLogin-popup">Connect</button>
+      <button id="login-popup-btn" class="btn btn-signin">Connect</button>
     </div>
   <?php endif; ?>
 </header>
