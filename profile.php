@@ -1,10 +1,8 @@
 <?php
 session_start();
 
-$conn = new mysqli("localhost", "root", "", "MythiFox");
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
+require_once __DIR__ . '/include/db_config.php';
+$conn = db_connect();
 
 if (isset($_GET['user'])) {
   $username = $conn->real_escape_string($_GET['user']);

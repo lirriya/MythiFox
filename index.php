@@ -26,10 +26,8 @@ if (session_status() == PHP_SESSION_NONE) {
   <?php endif; ?>
 
   <?php
-  $conn = new mysqli("localhost", "root", "", "MythiFox");
-  if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-  }
+  require_once __DIR__ . '/include/db_config.php';
+  $conn = db_connect();
 
   $sql = "SELECT posts.*, users.username, users.profile_pic FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC";
   $result = $conn->query($sql);
