@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         //si une image a été téléchargée
         if (!empty($_FILES['image']['name'])) {
-            $upload_dir = 'uploads/';       //dossier des uploads
+            $upload_dir = 'uploads/' . date('Y/m') . '/';       //dossier des uploads
             if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);       //crée le dossier s'il n'existe pas
 
 
