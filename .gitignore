@@ -1,0 +1,18 @@
+# User-generated content — never commit
+uploads/
+
+# Environment / secrets
+.env
+*.local
+
+# PHP / Composer dependencies
+/vendor/
+
+# Logs
+*.log
+
+# Editor & OS junk
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store
