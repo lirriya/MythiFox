@@ -1,5 +1,6 @@
 # User-generated content — never commit
-uploads/
+uploads/*
+!uploads/.htaccess
 
 # Environment / secrets
 .env

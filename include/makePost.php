@@ -9,6 +9,7 @@ if (!isset($_SESSION['user'])) {
 }
 
 require_once __DIR__ . '/db_config.php';
+require_once __DIR__ . '/upload_helper.php';
 $conn = db_connect();
 
 $username = $_SESSION['user'];
@@ -41,8 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$category || !$content) {
         echo '<p class="error">Please fill out all required fields.</p>';
     } else {
-        //si une image a été téléchargée
-        if (!empty($_FILES['image']['name'])) {
+        if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+            [$valid, $error] = validate_uploaded_image($_FILES['image']);
+            if (!$valid) {
+                echo '<p class="error">' . $error . '</p>';
+                return;
+            }
+
             $upload_dir = __DIR__ . '/../uploads/' . date('Y/m') . '/';
             if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
 
@@ -53,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $image_path = 'uploads/' . date('Y/m') . '/' . $filename;
             } else {
                 echo '<p class="error">Image upload failed.</p>';
+                return;
             }
         }
 
