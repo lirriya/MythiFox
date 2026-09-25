@@ -113,9 +113,13 @@ Failures return a human-friendly flash message rendered inline in the modal (no 
 
 `logout.php` now requires a CSRF-valid POST, clears the session array, expires the session cookie client-side, and then destroys the server-side session.
 
-## Email foundation
+## Email foundation and verification
 
-The provider-independent mail layer used by future verification and password-reset flows is documented in [`email-system.md`](email-system.md). It uses PHPMailer behind `MailerInterface` and a local Mailpit SMTP inbox during development. Account email fields and token-backed authentication flows are not connected yet.
+The provider-independent mail layer is documented in [`email-system.md`](email-system.md). It uses PHPMailer behind `MailerInterface` and a local Mailpit SMTP inbox during development.
+
+Account registration now stores a normalized email address and sends a verification link through the mailer. Verification tokens are stored only as SHA-256 hashes, expire after 24 hours, and are consumed in a transaction. The current login policy is unchanged, so unverified accounts can still sign in; future email-dependent actions can require `email_verified_at`.
+
+The verification and resend lifecycle is documented in [`email-verification.md`](email-verification.md).
 
 ## Files
 
@@ -125,7 +129,11 @@ The provider-independent mail layer used by future verification and password-res
 | `include/csrf.php` | CSRF token helpers |
 | `include/auth_guard.php` | Attempt counter, lockout, math CAPTCHA |
 | `authentication/login.php` | Login handler with CSRF + lockout + session rotation |
-| `authentication/register.php` | Sign-up handler with CSRF + password policy |
+| `authentication/register.php` | Sign-up handler with CSRF, password policy, and email verification issue |
+| `authentication/resend_verification.php` | CSRF-protected generic verification resend endpoint |
+| `authentication/verify_email.php` | Single-use verification-token consumer |
+| `include/email_verification.php` | Token lifecycle and email-verification service |
+| `include/email_templates/verification.php` | Escaped verification email template |
 | `authentication/logout.php` | CSRF-protected logout |
 | `include/authModal.php` | Modal markup: CSRF fields, CAPTCHA field, password hint |
 | `include/header.php` | Logout form now carries a CSRF field |

@@ -23,17 +23,21 @@ $needCaptcha = auth_guard_needs_captcha();
     <div class="modal-panel" data-panel="signup">
       <h2 class="modal-title">Sign up</h2>
       <?php if ($flash && $flash['origin'] === 'signup'): ?>
-        <p class="form-msg error"><?php echo htmlspecialchars($flash['message']); ?></p>
+        <p class="form-msg <?php echo ($flash['type'] ?? 'error') === 'success' ? 'success' : 'error'; ?>"><?php echo htmlspecialchars($flash['message']); ?></p>
       <?php endif; ?>
       <form method="POST" action="./authentication/register.php">
         <?php echo csrf_field(); ?>
         <input type="text" name="username" placeholder="Username" autocomplete="username" required>
+        <input type="email" name="email" placeholder="Email address" maxlength="254" autocomplete="email" required>
         <input type="password" name="password" placeholder="Password" autocomplete="new-password" required>
         <p class="form-hint">At least 8 characters, including a letter and a number.</p>
         <button class="btn btn-primary btn-block">Sign up</button>
       </form>
       <p class="modal-switch">Already have an account?
         <button type="button" class="modal-switch-link" data-switch="login">Login</button>
+      </p>
+      <p class="modal-switch verification-resend">Need a new verification link?
+        <a class="modal-switch-link" href="./authentication/resend_verification.php">Resend email</a>
       </p>
     </div>
 

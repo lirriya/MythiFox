@@ -76,6 +76,8 @@ Ces fichiers constituent les pages principales accessibles via le navigateur.
 * `id` (clé primaire)
 * `username` (unique)
 * `pwd` (mot de passe haché)
+* `email` (adresse unique, optionnelle pour les anciens comptes)
+* `email_verified_at` (date de vérification, optionnelle)
 * `bio`
 * `profile_pic` (par défaut : `assets/default.jpg`)
 * `created_at`
@@ -93,12 +95,13 @@ Ces fichiers constituent les pages principales accessibles via le navigateur.
 
 ## Flux de Données
 
-1. L'utilisateur s’inscrit via `authentication/register.php` (création dans la table `users`).
-2. Il se connecte via `login.php` (création de la session).
-3. Sur `index.php`, les publications sont affichées (jointure entre `users` et `posts`).
-4. L’utilisateur peut publier un contenu via un formulaire traité par `makePost.php`. L’image est enregistrée dans `uploads/` et la publication dans la table `posts`.
-5. Les publications peuvent être modifiées via `update_post.php` ou supprimées via `delete_post.php`.
-6. Le profil est modifiable via `edit_profile.php`.
+1. L'utilisateur s’inscrit via `authentication/register.php` (création dans la table `users`, normalisation de l'adresse e-mail et envoi d'un lien de vérification).
+2. Il peut ouvrir le lien reçu dans Mailpit via `authentication/verify_email.php`; le jeton est haché en base et utilisable une seule fois.
+3. Il se connecte via `login.php` (création de la session).
+4. Sur `index.php`, les publications sont affichées (jointure entre `users` et `posts`).
+5. L’utilisateur peut publier un contenu via un formulaire traité par `makePost.php`. L’image est enregistrée dans `uploads/` et la publication dans la table `posts`.
+6. Les publications peuvent être modifiées via `update_post.php` ou supprimées via `delete_post.php`.
+7. Le profil est modifiable via `edit_profile.php`.
 
 ## MISE À JOUR 02/06/2025
 
