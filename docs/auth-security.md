@@ -113,6 +113,10 @@ Failures return a human-friendly flash message rendered inline in the modal (no 
 
 `logout.php` now requires a CSRF-valid POST, clears the session array, expires the session cookie client-side, and then destroys the server-side session.
 
+## Email foundation
+
+The provider-independent mail layer used by future verification and password-reset flows is documented in [`email-system.md`](email-system.md). It uses PHPMailer behind `MailerInterface` and a local Mailpit SMTP inbox during development. Account email fields and token-backed authentication flows are not connected yet.
+
 ## Files
 
 | File | Role |

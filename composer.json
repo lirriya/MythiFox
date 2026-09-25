@@ -1,0 +1,22 @@
+{
+    "name": "lirriya/mythifox",
+    "description": "MythiFox social network",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.2",
+        "phpmailer/phpmailer": "^7.1"
+    },
+    "autoload": {
+        "classmap": [
+            "include/mailer/"
+        ],
+        "files": [
+            "include/mailer/mail_config.php"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}
