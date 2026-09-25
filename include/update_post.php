@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . '/session_boot.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['post_id']) && isset($_POST['content'])) {
   $postId = (int) $_POST['post_id'];

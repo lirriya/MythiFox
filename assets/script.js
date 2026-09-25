@@ -1,30 +1,55 @@
 window.addEventListener("DOMContentLoaded", function () {
-  // ========== Gestion des erreurs de login ==========
-  if (typeof loginError !== "undefined") {
-    if (loginError === "username") {
-      alert("Username not found. Please check your spelling or sign up first.");
-    } else if (loginError === "password") {
-      alert("Incorrect password. Try again or reset your password.");
-    } else if (loginError === "usertaken") {
-      alert("This username is already taken. Please choose another.");
+  // ========== Fonction toast (erreurs like) ==========
+  function showToast(message) {
+    let toast = document.querySelector(".toast");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.className = "toast";
+      document.body.appendChild(toast);
     }
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(function () {
+      toast.classList.remove("show");
+    }, 3000);
   }
 
-  // ========== Éléments de la popup ==========
+  // ========== Modal login / signup ==========
   const wrapper = document.querySelector(".wrapper");
   const loginBtn = document.getElementById("login-popup-btn");
-  const closeBtn = document.querySelector(".close");
 
-  if (loginBtn) {
+  if (loginBtn && wrapper) {
     loginBtn.addEventListener("click", function () {
+      wrapper.dataset.mode = "login";
       wrapper.classList.add("active-popup");
     });
   }
 
-  if (closeBtn) {
-    closeBtn.addEventListener("click", function () {
-      wrapper.classList.remove("active-popup");
+  if (wrapper) {
+    const closeEls = wrapper.querySelectorAll("[data-close-modal]");
+    closeEls.forEach(function (el) {
+      el.addEventListener("click", function () {
+        wrapper.classList.remove("active-popup");
+      });
     });
+
+    const switchLinks = wrapper.querySelectorAll("[data-switch]");
+    switchLinks.forEach(function (link) {
+      link.addEventListener("click", function () {
+        wrapper.dataset.mode = link.dataset.switch;
+      });
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        wrapper.classList.remove("active-popup");
+      }
+    });
+
+    if (wrapper.querySelector(".form-msg")) {
+      wrapper.classList.add("active-popup");
+    }
   }
 
   // ========== Dropdown menu de catégories ==========
@@ -161,10 +186,10 @@ window.addEventListener("DOMContentLoaded", function () {
               // L'utilisateur a déjà liké
               showPopup(button.parentElement, "You already liked that post !");
             } else {
-              alert(infos.message || "Erreur lors du like.");
+              showToast(infos.message || "Erreur lors du like.");
             }
           } else {
-            alert("Erreur réseau (statut " + xhr.status + ")");
+            showToast("Erreur réseau (statut " + xhr.status + ")");
           }
         }
       };

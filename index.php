@@ -1,7 +1,5 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
-  session_start();
-}
+require_once __DIR__ . '/include/session_boot.php';
 ?>
 
 <!DOCTYPE html>
@@ -13,7 +11,7 @@ if (session_status() == PHP_SESSION_NONE) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/styles.css?v=14">
+  <link rel="stylesheet" href="./assets/styles.css?v=17">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -152,41 +150,9 @@ if (session_status() == PHP_SESSION_NONE) {
 
   <?php $conn->close(); ?>
 
-  <!-- Fenêtre d'inscription et de connexion -->
-  <div class="wrapper">
-    <span class="close">
-      <svg class="icon icon-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-    </span>
-    <input type="checkbox" id="chk" aria-hidden="true">
+  <?php include 'include/authModal.php'; ?>
 
-    <!-- Formulaire d'inscription -->
-    <div class="signup">
-      <form method="POST" action="./authentication/register.php">
-        <label for="chk" aria-hidden="true">Sign up</label>
-        <input type="text" name="username" class="signupPH" placeholder="Username" required>
-        <input type="password" name="password" class="signupPH" placeholder="Password" required>
-        <button class="btn btn-primary btn-block">Sign up</button>
-      </form>
-    </div>
-
-    <!-- Formulaire de connexion -->
-    <div class="login">
-      <form method="POST" action="./authentication/login.php">
-        <label for="chk" aria-hidden="true">Login</label>
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button class="btn btn-primary btn-block">Login</button>
-      </form>
-    </div>
-  </div>
-
-  <?php if (isset($_GET['error'])): ?>
-    <script>
-      const loginError = "<?php echo $_GET['error']; ?>";
-    </script>
-  <?php endif; ?>
-
-  <script src="./assets/script.js?v=5"></script>
+  <script src="./assets/script.js?v=6"></script>
 </body>
 
 </html>

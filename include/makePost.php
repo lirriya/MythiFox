@@ -1,7 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/session_boot.php';
 
 if (!isset($_SESSION['user'])) {
     echo '<p class="error">You must be logged in to post.</p>';
