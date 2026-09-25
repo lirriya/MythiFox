@@ -1,6 +1,6 @@
 # MythiFox — Email System
 
-Status: mail transport foundation implemented; account verification and password-reset flows are not yet connected.
+Status: mail transport and local email verification are implemented; password reset and production email-provider configuration are not yet connected.
 
 ## Purpose
 
@@ -31,6 +31,10 @@ The future authentication controller will depend on `MailerInterface`, not PHPMa
 | `include/mailer/mail_config.php` | Reads mail settings from environment variables |
 | `include/mailer/MailerFactory.php` | Validates configuration and creates the SMTP adapter |
 | `include/mailer/SmtpMailer.php` | Configures PHPMailer and performs delivery |
+| `include/email_verification.php` | Creates, resends, and consumes verification tokens |
+| `include/email_templates/verification.php` | Builds escaped HTML and plain-text verification messages |
+| `database/migrations/003_user_emails.sql` | Adds nullable account email and verification timestamp |
+| `database/migrations/004_email_verification_tokens.sql` | Adds purpose-specific hashed verification tokens |
 | `tests/mailer_smoke_test.php` | Sends one local test message |
 
 ## Local SMTP configuration
@@ -101,6 +105,27 @@ $env:MAIL_TEST_RECIPIENT = 'another-address@example.test'
 & 'C:\xampp\php\php.exe' tests\mailer_smoke_test.php
 ```
 
+## Application email flow
+
+Registration now supplies the new account email to the verification service. The service creates a random token, stores only its SHA-256 hash, and asks `MailerInterface` to deliver a link built from `APP_URL`.
+
+```mermaid
+sequenceDiagram
+    participant R as Registration
+    participant T as Token service
+    participant D as MySQL
+    participant M as MailerInterface
+    participant I as Mailpit
+
+    R->>D: Insert unverified account
+    R->>T: Issue verification token
+    T->>D: Invalidate old tokens and store token hash
+    T->>M: Send HTML and plain-text message
+    M->>I: SMTP delivery
+```
+
+The resend route returns the same response for known and unknown addresses. A per-account cooldown limits repeated delivery requests. The full lifecycle is documented in [`email-verification.md`](email-verification.md).
+
 ## Delivery behavior
 
 ```mermaid
@@ -135,12 +160,14 @@ The foundation was verified on 2026-09-25:
 - [x] Mailpit displays both the HTML and plain-text message.
 - [x] The smoke test returns `smtp_delivery_failed` when Mailpit is unavailable.
 - [x] `vendor/` remains ignored and untracked.
+- [x] Registration stores a normalized unique email and sends a verification message.
+- [x] Verification tokens are hashed, expiring, single-use, and transactionally consumed.
+- [x] Resend requests use a generic response and a per-account cooldown.
 
 ## Next integration steps
 
-1. Add account email fields and migrations.
-2. Create a password-policy helper shared by registration and reset.
-3. Add purpose-bound verification and reset token tables.
-4. Send verification and reset messages through `MailerInterface`.
-5. Add rate limits and generic user-facing responses.
-6. Test the complete authentication flows in XAMPP.
+1. Create a shared password-policy helper for registration and reset.
+2. Add the separate password-reset token table and request flow.
+3. Add the reset form and validated password update route.
+4. Configure a production SMTP provider and verify the sending domain.
+5. Test the complete authentication flows in XAMPP.
