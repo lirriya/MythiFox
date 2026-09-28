@@ -1,45 +1,100 @@
 <?php
+
+declare(strict_types=1);
+
 require_once __DIR__ . '/session_boot.php';
+require_once __DIR__ . '/csrf.php';
+require_once __DIR__ . '/db_config.php';
+require_once __DIR__ . '/account.php';
+require_once __DIR__ . '/profile_validation.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id'])) {
-  $postId = intval($_POST['post_id']);
-
-  if (!isset($_SESSION['user'])) {
-    die('You must be logged in to delete a post.');
-  }
-
-  require_once __DIR__ . '/db_config.php';
-  $conn = db_connect();
-
-  $stmt = $conn->prepare("SELECT posts.id, posts.image FROM posts JOIN users ON posts.user_id = users.id WHERE posts.id = ? AND users.username = ?");
-  $stmt->bind_param("is", $postId, $_SESSION['user']);
-  $stmt->execute();
-  $result = $stmt->get_result();
-
-  if ($result->num_rows === 0) {
-    die("You are not allowed to delete this post.");
-  }
-
-  $post = $result->fetch_assoc();
-  $image_path = $post['image'];
-
-  $stmt = $conn->prepare("DELETE FROM posts WHERE id = ?");
-  $stmt->bind_param("i", $postId);
-  $stmt->execute();
-
-  $stmt->close();
-  $conn->close();
-
-  if ($image_path && str_starts_with($image_path, 'uploads/')) {
-    $file = __DIR__ . '/../' . $image_path;
-    if (is_file($file)) {
-      unlink($file);
-    }
-  }
-
-  header("Location: ../index.php");
-  exit;
-} else {
-  echo "Invalid request.";
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    exit;
 }
-?>
+
+if (!isset($_SESSION['user'])) {
+    http_response_code(401);
+    exit;
+}
+
+if (!csrf_verify($_POST['csrf'] ?? '')) {
+    http_response_code(403);
+    exit;
+}
+
+$postIdValue = profile_request_string($_POST, 'post_id');
+
+if (!ctype_digit($postIdValue) || (int) $postIdValue < 1) {
+    http_response_code(422);
+    exit;
+}
+
+$conn = db_connect();
+$userId = account_current_user_id($conn);
+
+if ($userId === null) {
+    $conn->close();
+    http_response_code(401);
+    exit;
+}
+
+$postId = (int) $postIdValue;
+$stmt = $conn->prepare('SELECT id, image FROM posts WHERE id = ? AND user_id = ? LIMIT 1');
+
+if ($stmt === false) {
+    $conn->close();
+    http_response_code(500);
+    exit;
+}
+
+$stmt->bind_param('ii', $postId, $userId);
+
+if (!$stmt->execute()) {
+    $stmt->close();
+    $conn->close();
+    http_response_code(500);
+    exit;
+}
+
+$result = $stmt->get_result();
+$post = $result->fetch_assoc();
+$stmt->close();
+
+if (!$post) {
+    $conn->close();
+    http_response_code(403);
+    exit;
+}
+
+$delete = $conn->prepare('DELETE FROM posts WHERE id = ? AND user_id = ?');
+
+if ($delete === false) {
+    $conn->close();
+    http_response_code(500);
+    exit;
+}
+
+$delete->bind_param('ii', $postId, $userId);
+
+if (!$delete->execute() || $delete->affected_rows !== 1) {
+    $delete->close();
+    $conn->close();
+    http_response_code(403);
+    exit;
+}
+
+$delete->close();
+$conn->close();
+
+$imagePath = is_string($post['image'] ?? null) ? $post['image'] : '';
+
+if ($imagePath !== '' && str_starts_with($imagePath, 'uploads/')) {
+    $file = __DIR__ . '/../' . $imagePath;
+    if (is_file($file)) {
+        unlink($file);
+    }
+}
+
+header('Location: ../index.php');
+exit;

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/include/session_boot.php';
+require_once __DIR__ . '/include/csrf.php';
 ?>
 
 <!DOCTYPE html>
@@ -11,9 +12,10 @@ require_once __DIR__ . '/include/session_boot.php';
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/styles.css?v=19">
+  <link rel="stylesheet" href="./assets/styles.css?v=20">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="<?php echo htmlspecialchars(csrf_token(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 </head>
 
 
@@ -81,31 +83,7 @@ require_once __DIR__ . '/include/session_boot.php';
             <div class="popup">You already liked that post !</div>
           </div>
 
-          <div class="post-actions">
-            <!-- Si l'utilisateur connecté est l'auteur du post on lui affiche les options d'édition -->
-            <?php if (isset($_SESSION['user']) && $_SESSION['user'] === $post['username']): ?>
-              <div class="post-actions">
-                <button id="toggleEditBtn" class="btn btn-ghost btn-sm">Edit Post</button>
-
-                <div class="epf-group">
-                  <!-- Formulaire pour enregistrer les modifications -->
-                  <form id="epf-form" method="POST" action="./include/update_post.php" class="epf-hidden">
-                    <textarea name="content" rows="3"
-                      style="width: 100%;"><?php echo htmlspecialchars($post['content']); ?></textarea>
-                    <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
-                    <button type="submit" class="btn btn-primary btn-sm">Save</button>
-                  </form>
-                </div>
-
-                <!-- Formulaire pour supprimer le post -->
-                <form method="POST" action="./include/delete_post.php"
-                  onsubmit="return confirm('Are you sure you want to delete this post?');" style="display:inline;">
-                  <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
-                  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                </form>
-              </div>
-            <?php endif; ?>
-          </div>
+          <?php include __DIR__ . '/include/post_actions.php'; ?>
         </div>
       <?php endwhile; ?>
     </div>

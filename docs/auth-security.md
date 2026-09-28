@@ -109,6 +109,57 @@ Sign-up (`register.php`) now enforces:
 
 Failures return a human-friendly flash message rendered inline in the modal (no `alert()`). Passwords continue to be stored with `password_hash()` / verified with `password_verify()`.
 
+## Login hardening
+
+The login handler previously answered with two different messages — "Username not found" versus
+"Incorrect password" — which let anyone enumerate valid accounts, and it only compared a real hash
+when the account existed, so response time also leaked account existence.
+
+Both signals are removed:
+
+- A single generic message, `Invalid username or password. Try again.`, covers every failure.
+- When no account matches, `password_verify()` is still run against a fixed dummy bcrypt hash so the
+  work factor is the same in both branches.
+- The query now selects `id, pwd` and stores `$_SESSION['user_id']` alongside `$_SESSION['user']`, so
+  ownership checks can use a stable identifier instead of a mutable username string.
+- POST values are read through a string-only accessor, so array-shaped input cannot reach the query.
+
+## Session identity
+
+`include/account.php` owns the mapping between a session and an account:
+
+- `account_current_user_id()` trusts `$_SESSION['user_id']` when present, and otherwise resolves the
+  legacy `$_SESSION['user']` username to an id and backfills it. Sessions created before this change
+  keep working.
+- `account_user_by_id()` and `account_user_by_username()` return a single normalised row shape, so
+  callers never read undefined array keys.
+
+Every mutating endpoint (`include/edit_profile.php`, `include/update_post.php`,
+`include/delete_post.php`) resolves ownership through this helper and scopes its `UPDATE`/`DELETE` with
+`WHERE user_id = ?`, so an authorisation check and the write cannot drift apart.
+
+## CSRF coverage
+
+`SameSite=Lax` session cookies already block ordinary cross-site form posts in modern browsers, but they
+do not protect a state change triggered by a top-level `GET` navigation, and they are not a substitute
+for an explicit token. Every mutating endpoint now verifies a token itself and rejects anything other
+than `POST`.
+
+| Endpoint | Method guard | CSRF | Ownership |
+|---|---|---|---|
+| `authentication/login.php` | POST only | Yes | n/a |
+| `authentication/register.php` | POST only | Yes | n/a |
+| `authentication/logout.php` | POST only | Yes | Session |
+| `authentication/resend_verification.php` | POST only | Yes | Session |
+| `include/edit_profile.php` | POST only | Yes | `user_id` |
+| `include/makePost.php` | POST only (renders on GET) | Yes | Session |
+| `include/update_post.php` | 405 otherwise | Yes | `post.user_id` |
+| `include/delete_post.php` | 405 otherwise | Yes | `post.user_id` |
+| `include/like_post.php` | 405 otherwise | Yes (form field or `X-CSRF-Token`) | Session |
+
+The token is published to the page in a `<meta name="csrf-token">` element so the asynchronous like
+button can send it in both a form field and a request header.
+
 ## Logout
 
 `logout.php` now requires a CSRF-valid POST, clears the session array, expires the session cookie client-side, and then destroys the server-side session.
@@ -119,7 +170,25 @@ The provider-independent mail layer is documented in [`email-system.md`](email-s
 
 Account registration now stores a normalized email address and sends a verification link through the mailer. Verification tokens are stored only as SHA-256 hashes, expire after 24 hours, and are consumed in a transaction. The current login policy is unchanged, so unverified accounts can still sign in; future email-dependent actions can require `email_verified_at`.
 
-The verification and resend lifecycle is documented in [`email-verification.md`](email-verification.md).
+The verification and resend lifecycle is documented in [`email-verification.md`](email-verification.md). Changing the email of an existing account uses a separate pending-address flow documented in [`email-change.md`](email-change.md).
+
+## Profile and post editing
+
+The profile editor, the shared username and bio policy, and the avatar crop flow are documented in
+[`profile-editing.md`](profile-editing.md). The redesigned profile page is documented in
+[`profile-page.md`](profile-page.md).
+
+## Upload hardening
+
+`include/upload_helper.php` no longer trusts the client-supplied extension or size:
+
+- `getimagesize()` must succeed and the detected MIME type must be in the allow-list.
+- The detected MIME must match the declared extension, so a `.png` that is really a script is rejected.
+- Dimensions must be positive and within the 6000 px ceiling.
+- The stored extension is derived from the detected MIME, not from the filename.
+- Stored names are random (`profile_<32 hex>.<ext>`), replacing the previous `time()`-based naming.
+- Post upload directories are created with `0755` instead of `0777`.
+- Replacing or removing an avatar deletes the previous file, so uploads no longer accumulate.
 
 ## Files
 
@@ -128,12 +197,33 @@ The verification and resend lifecycle is documented in [`email-verification.md`]
 | `include/session_boot.php` | Hardened session start |
 | `include/csrf.php` | CSRF token helpers |
 | `include/auth_guard.php` | Attempt counter, lockout, math CAPTCHA |
-| `authentication/login.php` | Login handler with CSRF + lockout + session rotation |
-| `authentication/register.php` | Sign-up handler with CSRF, password policy, and email verification issue |
+| `include/account.php` | Session → account identity resolution and row access |
+| `include/profile_validation.php` | Shared username, bio, and POST input rules |
+| `authentication/login.php` | Login handler with CSRF, generic errors, lockout, session rotation |
+| `authentication/register.php` | Sign-up handler with CSRF, shared password/username policy, email verification issue |
 | `authentication/resend_verification.php` | CSRF-protected generic verification resend endpoint |
 | `authentication/verify_email.php` | Single-use verification-token consumer |
+| `authentication/verify_email_change.php` | Single-use email-change token consumer and status page |
 | `include/email_verification.php` | Token lifecycle and email-verification service |
+| `include/email_change.php` | Pending-address issue and transactional consume |
 | `include/email_templates/verification.php` | Escaped verification email template |
+| `include/email_templates/email_change.php` | Escaped email-change confirmation template |
+| `include/edit_profile.php` | POST-only, CSRF-protected profile update handler |
+| `include/upload_helper.php` | Image validation and extension derivation |
+| `include/post_actions.php` | Shared owner-only post edit and delete controls |
 | `authentication/logout.php` | CSRF-protected logout |
 | `include/authModal.php` | Modal markup: CSRF fields, CAPTCHA field, password hint |
 | `include/header.php` | Logout form now carries a CSRF field |
+
+## Tests
+
+Run from the project root with the XAMPP PHP binary:
+
+```
+php tests\profile_validation_test.php
+php tests\email_change_test.php
+php tests\email_change_roundtrip_test.php
+php tests\email_verification_test.php
+php tests\post_actions_test.php
+php tests\mailer_smoke_test.php    (requires a running Mailpit)
+```

@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/session_boot.php';
+require_once __DIR__ . '/csrf.php';
+require_once __DIR__ . '/profile_validation.php';
 
 if (!isset($_SESSION['user'])) {
     echo '<p class="error">You must be logged in to post.</p>';
@@ -32,13 +34,22 @@ $profile_pic = $user['profile_pic'];
 <?php
 //si le formulaire a été soumis en méthode POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $category = $_POST['category'] ?? '';
-    $content = $_POST['content'] ?? '';
-    $image_path = null;
+    if (!csrf_verify($_POST['csrf'] ?? '')) {
+        echo '<p class="error">Your form expired. Reload the page and try again.</p>';
+        return;
+    }
 
-    //vérifie si les champs obligatoires sont remplis
+    $category = profile_request_string($_POST, 'category');
+    $content = trim(profile_request_string($_POST, 'content'));
+    $image_path = null;
+    $valid_categories = ['music', 'art', 'quotes', 'games', 'anime', 'coding'];
+
     if (!$category || !$content) {
         echo '<p class="error">Please fill out all required fields.</p>';
+    } elseif (!in_array($category, $valid_categories, true)) {
+        echo '<p class="error">Please choose a valid category.</p>';
+    } elseif (profile_bio_length($content) > 20000) {
+        echo '<p class="error">Post content is too long.</p>';
     } else {
         if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
             [$valid, $error] = validate_uploaded_image($_FILES['image']);
@@ -48,9 +59,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $upload_dir = __DIR__ . '/../uploads/' . date('Y/m') . '/';
-            if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
+            if (!is_dir($upload_dir) && !mkdir($upload_dir, 0755, true) && !is_dir($upload_dir)) {
+                echo '<p class="error">The upload directory is not available.</p>';
+                return;
+            }
 
-            $filename = time() . '_' . basename($_FILES['image']['name']);
+            $extension = uploaded_image_extension($_FILES['image']);
+            if ($extension === null) {
+                echo '<p class="error">The uploaded image could not be processed.</p>';
+                return;
+            }
+
+            $filename = date('Ymd') . '_' . bin2hex(random_bytes(16)) . '.' . $extension;
             $target_path = $upload_dir . $filename;
 
             if (move_uploaded_file($_FILES['image']['tmp_name'], $target_path)) {
@@ -82,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <section>
     <!-- Formulaire de création de post -->
     <form action="include/makePost.php" method="post" enctype="multipart/form-data">
+        <?php echo csrf_field(); ?>
         <div class="create-post">
             <div class="create-post-input">
                 <!-- Affiche la photo de profil de l'utilisateur -->

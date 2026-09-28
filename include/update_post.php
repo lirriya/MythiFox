@@ -1,37 +1,74 @@
 <?php
+
+declare(strict_types=1);
+
 require_once __DIR__ . '/session_boot.php';
+require_once __DIR__ . '/csrf.php';
+require_once __DIR__ . '/db_config.php';
+require_once __DIR__ . '/account.php';
+require_once __DIR__ . '/profile_validation.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['post_id']) && isset($_POST['content'])) {
-  $postId = (int) $_POST['post_id'];
-  $newContent = trim($_POST['content']);
-
-  if (!isset($_SESSION['user'])) {
-    die('You must be logged in.');
-  }
-
-  require_once __DIR__ . '/db_config.php';
-  $conn = db_connect();
-
-  $check = $conn->prepare("SELECT posts.id FROM posts JOIN users ON posts.user_id = users.id WHERE posts.id = ? AND users.username = ?");
-  $check->bind_param("is", $postId, $_SESSION['user']);
-  $check->execute();
-  $result = $check->get_result();
-
-  if ($result->num_rows == 0) {
-    die("Not allowed.");
-  }
-
-  $update = $conn->prepare("UPDATE posts SET content = ? WHERE id = ?");
-  $update->bind_param("si", $newContent, $postId);
-  $update->execute();
-
-  $check->close();
-  $update->close();
-  $conn->close();
-
-  header("Location: ../index.php");
-  exit;
-} else {
-  echo "Invalid request.";
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    exit;
 }
-?>
+
+if (!isset($_SESSION['user'])) {
+    http_response_code(401);
+    exit;
+}
+
+if (!csrf_verify($_POST['csrf'] ?? '')) {
+    http_response_code(403);
+    exit;
+}
+
+$postIdValue = profile_request_string($_POST, 'post_id');
+$content = trim(profile_request_string($_POST, 'content'));
+if (!ctype_digit($postIdValue) || (int) $postIdValue < 1) {
+    http_response_code(422);
+    exit;
+}
+
+if ($content === '' || profile_bio_length($content) > 20000) {
+    http_response_code(422);
+    exit;
+}
+
+$conn = db_connect();
+$userId = account_current_user_id($conn);
+
+if ($userId === null) {
+    $conn->close();
+    http_response_code(401);
+    exit;
+}
+
+$stmt = $conn->prepare('UPDATE posts SET content = ? WHERE id = ? AND user_id = ?');
+
+if ($stmt === false) {
+    $conn->close();
+    http_response_code(500);
+    exit;
+}
+
+$postId = (int) $postIdValue;
+$stmt->bind_param('sii', $content, $postId, $userId);
+
+if (!$stmt->execute() || $stmt->affected_rows < 1) {
+    $stmt->close();
+    $conn->close();
+    http_response_code(403);
+    exit;
+}
+
+$stmt->close();
+$returnTo = profile_request_string($_POST, 'return_to');
+$conn->close();
+
+if ($returnTo === 'profile') {
+    header('Location: ../profile.php');
+} else {
+    header('Location: ../index.php');
+}
+exit;

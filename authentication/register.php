@@ -6,6 +6,7 @@ require_once __DIR__ . '/../include/session_boot.php';
 require_once __DIR__ . '/../include/db_config.php';
 require_once __DIR__ . '/../include/csrf.php';
 require_once dirname(__DIR__) . '/vendor/autoload.php';
+require_once __DIR__ . '/../include/profile_validation.php';
 require_once __DIR__ . '/../include/email_verification.php';
 
 $conn = db_connect();
@@ -27,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         is_string($_POST['email'] ?? null) ? $_POST['email'] : ''
     );
 
-    if (!preg_match('/^[A-Za-z0-9_]{3,20}$/', $username)) {
+    if (!profile_username_is_valid($username)) {
         $_SESSION['flash'] = [
             'type' => 'error',
             'origin' => 'signup',
@@ -168,6 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $conn->close();
     session_regenerate_id(true);
+    $_SESSION['user_id'] = $userId;
     $_SESSION['user'] = $username;
     $_SESSION['flash'] = [
         'type' => $verificationSent ? 'success' : 'error',

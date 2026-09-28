@@ -12,8 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $username = trim($_POST['username']);
-    $password_input = $_POST['password'];
+    $username = is_string($_POST['username'] ?? null) ? trim($_POST['username']) : '';
+    $password_input = is_string($_POST['password'] ?? null) ? $_POST['password'] : '';
 
     $blockedUntil = auth_guard_blocked_until();
     if ($blockedUntil !== null) {
@@ -31,25 +31,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $stmt = $conn->prepare("SELECT pwd FROM users WHERE username = ?");
+    $stmt = $conn->prepare("SELECT id, pwd FROM users WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
-    $stmt->bind_result($password_hashed);
+    $user_id = null;
+    $password_hashed = null;
+    $stmt->bind_result($user_id, $password_hashed);
 
     if ($stmt->fetch()) {
-        if (password_verify($password_input, $password_hashed)) {
+        if (password_verify($password_input, (string) $password_hashed)) {
             session_regenerate_id(true);
+            $_SESSION['user_id'] = (int) $user_id;
             $_SESSION['user'] = $username;
             auth_guard_reset();
             header("Location: ../index.php");
             exit();
         }
-        auth_guard_record_failure();
-        $message = 'Incorrect password. Try again.';
     } else {
-        auth_guard_record_failure();
-        $message = 'Username not found. Please check your spelling or sign up first.';
+        password_verify($password_input, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.');
     }
+
+    auth_guard_record_failure();
+    $message = 'Invalid username or password. Try again.';
 
     $stmt->close();
 

@@ -37,7 +37,7 @@ $isSuccess = in_array($status, ['success', 'already-verified'], true);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Email verification · MythiFox</title>
-  <link rel="stylesheet" href="../assets/styles.css?v=19">
+  <link rel="stylesheet" href="../assets/styles.css?v=20">
 </head>
 <body class="auth-page">
   <main class="auth-card">

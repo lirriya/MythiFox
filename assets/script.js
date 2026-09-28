@@ -82,40 +82,36 @@ window.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ========== Formulaire d'édition de profil ==========
-  const editToggle = document.getElementById("toggleEditBtn");
-  const editForm = document.getElementById("epf-form");
+  window.mythifoxToast = showToast;
 
-  if (editToggle && editForm) {
-    editToggle.addEventListener("click", function () {
-      if (editForm.classList.contains("epf-hidden")) {
-        editForm.classList.remove("epf-hidden");
-        editToggle.textContent = "Close";
-      } else {
-        editForm.classList.add("epf-hidden");
-        editToggle.textContent = "Edit Profile";
-      }
-    });
+  // ========== Édition d'un post ==========
+  function setPostEditorOpen(button, open) {
+    const postId = button.getAttribute("data-post-id");
+    const editor = document.querySelector(`[data-post-editor="${postId}"]`);
+    if (!editor) return;
+
+    editor.hidden = !open;
+    button.setAttribute("aria-expanded", open ? "true" : "false");
+    button.textContent = open ? "Close" : "Edit";
+
+    if (open) {
+      const textarea = editor.querySelector("textarea");
+      if (textarea) textarea.focus();
+    }
   }
 
-  // ========== Activation des zones éditables pour les posts ==========
-  const allEditButtons = document.querySelectorAll(".edit-btn");
+  document.querySelectorAll("[data-post-edit-toggle]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      const isOpen = button.getAttribute("aria-expanded") === "true";
+      setPostEditorOpen(button, !isOpen);
+    });
+  });
 
-  allEditButtons.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      const postId = btn.dataset.postId;
-      const contentBox = document.getElementById("content-" + postId);
-      const text = contentBox.innerText.trim();
-
-      contentBox.innerHTML = `<textarea name="content" rows="4" style="width:100%;">${text}</textarea>`;
-
-      const saveButton = document.querySelector(
-        `.save-btn[data-post-id="${postId}"]`
-      );
-      if (saveButton) saveButton.style.display = "inline";
-
-      const updateForm = document.getElementById("form-" + postId);
-      if (updateForm) updateForm.style.display = "block";
+  document.querySelectorAll("[data-post-edit-cancel]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      const postId = button.getAttribute("data-post-id");
+      const toggle = document.querySelector(`[data-post-edit-toggle][data-post-id="${postId}"]`);
+      if (toggle) setPostEditorOpen(toggle, false);
     });
   });
 
@@ -153,11 +149,13 @@ window.addEventListener("DOMContentLoaded", function () {
 
       const postId = this.getAttribute("data-post-id");
       const countSpan = this.querySelector(".like-count");
+      const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+      const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
       const xhr = new XMLHttpRequest();
-      const self = this;
 
       xhr.open("POST", "include/like_post.php", true);
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.setRequestHeader("X-CSRF-Token", csrfToken);
 
       xhr.onreadystatechange = function () {
         // Vérifie si la requête est terminée (étape 4)
@@ -186,14 +184,24 @@ window.addEventListener("DOMContentLoaded", function () {
               // L'utilisateur a déjà liké
               showPopup(button.parentElement, "You already liked that post !");
             } else {
-              showToast(infos.message || "Erreur lors du like.");
+              const likeMessages = {
+                login_required: "Sign in to like posts.",
+                invalid_token: "Your session expired. Reload the page.",
+                invalid_post: "That post is not available.",
+                post_not_found: "That post is not available.",
+                method_not_allowed: "That request was not allowed.",
+                server_error: "Something went wrong. Try again."
+              };
+              showToast(likeMessages[infos.message] || "We could not register that like.");
             }
           } else {
-            showToast("Erreur réseau (statut " + xhr.status + ")");
+            showToast("Network error (status " + xhr.status + ").");
           }
         }
       };
-      xhr.send("post_id=" + encodeURIComponent(postId));
+      xhr.send(
+        "post_id=" + encodeURIComponent(postId) + "&csrf=" + encodeURIComponent(csrfToken)
+      );
     });
   });
 });
