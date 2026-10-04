@@ -14,6 +14,7 @@ The authentication flow previously accepted weak passwords, had no protection ag
 | Session fixation | `session_regenerate_id(true)` on login and sign-up | `login.php`, `register.php` |
 | Cookie exfiltration / hijacking | `HttpOnly` + `SameSite=Lax` + `Secure` (when HTTPS) session cookies | `session_boot.php` |
 | Session ID guessing | PHP strict session mode | `session_boot.php` |
+| Content sniffing / clickjacking / token leakage via `Referer` | Site-wide `nosniff`, `X-Frame-Options`, `Referrer-Policy` response headers | `.htaccess` (see [`security-headers.md`](security-headers.md)) |
 
 ## Architecture
 
@@ -137,3 +138,4 @@ The verification and resend lifecycle is documented in [`email-verification.md`]
 | `authentication/logout.php` | CSRF-protected logout |
 | `include/authModal.php` | Modal markup: CSRF fields, CAPTCHA field, password hint |
 | `include/header.php` | Logout form now carries a CSRF field |
+| `.htaccess` | Site-wide response security headers — documented in [`security-headers.md`](security-headers.md) |
